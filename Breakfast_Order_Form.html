@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Breakfast Order</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  /* ===================== VARIABLES ===================== */
+  :root {
+    --cream: #FAF6F0;
+    --cream-dark: #F2EBE0;
+    --gold: #B8860B;
+    --gold-light: #D4A520;
+    --red: #8B2020;
+    --red-light: #C0392B;
+    --text: #2C1810;
+    --text-muted: #6B5B4E;
+    --border: #D4C4B0;
+    --white: #FFFFFF;
+    --section-bg: #FFFDFB;
+    --shadow: 0 2px 12px rgba(44,24,16,0.08);
+  }
+
+  /* ===================== RESET ===================== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  /* ===================== HEADER ===================== */
+  .hero {
+    background: var(--red);
+    padding: 2.5rem 1.5rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg, transparent, transparent 30px,
+      rgba(255,255,255,0.03) 30px, rgba(255,255,255,0.03) 31px
+    );
+  }
+  .hero-inner { position: relative; z-index: 1; }
+  .hero-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: rgba(255,255,255,0.65);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 7vw, 42px);
+    font-weight: 400;
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.02em;
+  }
+  .hero-time {
+    font-size: 13px;
+    color: rgba(255,255,255,0.75);
+    margin-top: 0.5rem;
+  }
+  .hero-rule {
+    width: 60px; height: 1px;
+    background: rgba(255,255,255,0.35);
+    margin: 1rem auto;
+  }
+
+  /* ===================== GUEST INFO ===================== */
+  .guest-card {
+    background: var(--white);
+    border-radius: 16px;
+    margin: -1px 1rem 1.25rem;
+    padding: 1.25rem 1.25rem 1rem;
+    box-shadow: var(--shadow);
+    position: relative;
+    z-index: 2;
+  }
+  .guest-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--red);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .guest-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .field-group { display: flex; flex-direction: column; gap: 4px; }
+  .field-group label { font-size: 11px; font-weight: 500; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; }
+  .field-group input, .field-group select {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    background: var(--cream);
+    outline: none;
+    transition: border-color 0.15s;
+    width: 100%;
+  }
+  .field-group input:focus, .field-group select:focus { border-color: var(--gold); }
+
+  /* ===================== PAGE LABEL ===================== */
+  .page-label {
+    display: flex; align-items: center; gap: 10px;
+    padding: 0.5rem 1rem 0.35rem;
+  }
+  .page-label-line { flex: 1; height: 1px; background: var(--border); }
+  .page-label-text {
+    font-size: 10px; font-weight: 500; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--text-muted); white-space: nowrap;
+  }
+  .page-limit {
+    text-align: center; font-size: 12px; color: var(--red);
+    font-weight: 500; padding: 0 1rem 0.75rem;
+    letter-spacing: 0.04em;
+  }
+
+  /* ===================== SECTION CARD ===================== */
+  .section-card {
+    background: var(--section-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin: 0 1rem 0.85rem;
+    overflow: hidden;
+  }
+  .section-head {
+    background: var(--cream-dark);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 1rem;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+  }
+  .section-head h3 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--red);
+  }
+  .section-body { padding: 0.85rem 1rem; }
+
+  /* ===================== CHECKBOX GRID ===================== */
+  .cb-grid {
+    display: flex; flex-wrap: wrap; gap: 7px;
+  }
+  .cb-pill {
+    display: flex; align-items: center; gap: 6px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 5px 12px 5px 8px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text);
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .cb-pill:hover { border-color: var(--gold-light); background: #FFF9F0; }
+  .cb-pill input[type=checkbox] { display: none; }
+  .cb-pill .pill-check {
+    width: 15px; height: 15px;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    background: var(--white);
+  }
+  .cb-pill.active {
+    border-color: var(--red);
+    background: #FFF0F0;
+  }
+  .cb-pill.active .pill-check {
+    background: var(--red);
+    border-color: var(--red);
+  }
+  .cb-pill.active .pill-check::after {
+    content: '';
+    width: 8px; height: 5px;
+    border-left: 1.5px solid white;
+    border-bottom: 1.5px solid white;
+    transform: rotate(-45deg) translateY(-1px);
+    display: block;
+  }
+
+  /* ===================== MIXED / DETAILED ITEMS ===================== */
+  .item-list { display: flex; flex-direction: column; gap: 6px; }
+  .item-row {
+    display: flex; align-items: flex-start; gap: 10px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 9px 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .item-row:hover { border-color: var(--gold-light); }
+  .item-row.active { border-color: var(--red); background: #FFF6F6; }
+  .item-row input[type=checkbox] { display: none; }
+  .item-check {
+    width: 16px; height: 16px; border-radius: 4px;
+    border: 1.5px solid var(--border);
+    flex-shrink: 0; margin-top: 1px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s; background: var(--white);
+  }
+  .item-row.active .item-check {
+    background: var(--red); border-color: var(--red);
+  }
+  .item-row.active .item-check::after {
+    content: '';
+    width: 9px; height: 5px;
+    border-left: 1.5px solid white;
+    border-bottom: 1.5px solid white;
+    transform: rotate(-45deg) translateY(-1px);
+    display: block;
+  }
+  .item-text .item-name { font-size: 13px; font-weight: 500; color: var(--text); }
+  .item-text .item-desc { font-size: 11px; color: var(--text-muted); margin-top: 1px; line-height: 1.4; }
+
+  /* ===================== EGGS SPECIAL ===================== */
+  .eggs-grid { display: flex; flex-direction: column; gap: 6px; }
+  .eggs-row { display: flex; align-items: flex-start; gap: 10px; }
+  .eggs-row .item-row { flex: 1; }
+  .eggs-note-input {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 7px 10px;
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    background: var(--cream);
+    width: 100%; margin-top: 6px; outline: none;
+  }
+  .eggs-note-input:focus { border-color: var(--gold); }
+
+  /* ===================== OMELETTE FILLINGS ===================== */
+  .sub-label {
+    font-size: 11px; color: var(--text-muted);
+    font-weight: 500; letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin: 8px 0 5px;
+  }
+  .filling-grid { display: flex; flex-wrap: wrap; gap: 5px; }
+  .filling-pill {
+    display: flex; align-items: center; gap: 5px;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 3px 10px 3px 7px;
+    cursor: pointer; font-size: 12px; color: var(--text);
+    transition: all 0.15s; user-select: none;
+  }
+  .filling-pill:hover { border-color: var(--gold-light); }
+  .filling-pill input[type=checkbox] { display: none; }
+  .filling-pill .fp-check {
+    width: 12px; height: 12px; border-radius: 3px;
+    border: 1px solid var(--border); background: var(--white);
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .filling-pill.active { border-color: var(--gold); background: #FFFBF0; }
+  .filling-pill.active .fp-check { background: var(--gold); border-color: var(--gold); }
+  .filling-pill.active .fp-check::after {
+    content: ''; width: 6px; height: 4px;
+    border-left: 1.5px solid white; border-bottom: 1.5px solid white;
+    transform: rotate(-45deg) translateY(-1px); display: block;
+  }
+
+  /* ===================== INLINE SELECTS ===================== */
+  .inline-section {
+    background: var(--section-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin: 0 1rem 0.85rem;
+    padding: 0.85rem 1rem;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  }
+  .inline-label-tag {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--red);
+    background: rgba(139,32,32,0.07);
+    padding: 3px 10px; border-radius: 12px;
+    white-space: nowrap;
+  }
+
+  /* ===================== SMOOTHIE BOWL LETTERS ===================== */
+  .bowl-letters {
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 8px 12px; font-size: 14px;
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 0.15em; color: var(--text);
+    background: var(--cream); width: 100%; margin-top: 8px;
+    outline: none; text-transform: uppercase;
+  }
+  .bowl-letters:focus { border-color: var(--gold); }
+
+  /* ===================== COUNTER BADGE ===================== */
+  .count-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 20px; height: 20px; border-radius: 10px;
+    background: var(--red); color: white;
+    font-size: 11px; font-weight: 500; padding: 0 5px;
+    margin-left: 6px;
+    transition: all 0.2s;
+  }
+  .count-badge.zero { background: var(--border); color: var(--text-muted); }
+
+  /* ===================== PROGRESS ===================== */
+  .progress-bar-wrap {
+    margin: 0.75rem 1rem 0;
+    background: var(--cream-dark);
+    border-radius: 4px; height: 4px; overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%; background: var(--red);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+  .progress-label {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--text-muted);
+    padding: 4px 1rem 0;
+  }
+
+  /* ===================== SUBMIT ===================== */
+  .submit-wrap {
+    padding: 1.5rem 1rem;
+    display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
+  }
+  .btn-submit {
+    width: 100%; max-width: 400px;
+    background: var(--red);
+    color: white;
+    border: none; border-radius: 12px;
+    padding: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px; font-weight: 500;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-submit:hover { background: #6E1A1A; transform: translateY(-1px); }
+  .btn-submit:active { transform: translateY(0); }
+  .btn-submit:disabled { background: var(--border); cursor: not-allowed; transform: none; }
+  .submit-note { font-size: 11px; color: var(--text-muted); text-align: center; }
+
+  /* ===================== SUCCESS SCREEN ===================== */
+  .success-screen {
+    display: none;
+    position: fixed; inset: 0;
+    background: var(--red);
+    z-index: 100;
+    flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 2rem;
+  }
+  .success-screen.show { display: flex; }
+  .success-icon {
+    width: 72px; height: 72px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.4);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+  .success-icon svg { width: 36px; height: 36px; }
+  .success-screen h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px; color: white; margin-bottom: 0.5rem;
+  }
+  .success-screen p { color: rgba(255,255,255,0.75); font-size: 14px; max-width: 280px; line-height: 1.6; }
+  .success-room { font-size: 20px; font-weight: 500; color: white; margin: 1rem 0; }
+  .btn-new-order {
+    margin-top: 2rem;
+    background: transparent; color: white;
+    border: 1.5px solid rgba(255,255,255,0.5);
+    border-radius: 10px; padding: 10px 28px;
+    font-family: 'DM Sans', sans-serif; font-size: 14px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-new-order:hover { background: rgba(255,255,255,0.1); }
+
+  /* ===================== LOADING ===================== */
+  .spinner {
+    width: 18px; height: 18px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ===================== TOAST ===================== */
+  .toast {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    background: var(--text); color: white;
+    border-radius: 10px; padding: 10px 18px;
+    font-size: 13px; z-index: 200;
+    transition: opacity 0.3s; opacity: 0; pointer-events: none;
+    white-space: nowrap;
+  }
+  .toast.show { opacity: 1; }
+
+  @media (max-width: 400px) {
+    .guest-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== SUCCESS SCREEN ==================== -->
+<div class="success-screen" id="successScreen">
+  <div class="success-icon">
+    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 18L14 24L28 10" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <h2>Order Received</h2>
+  <div class="success-room" id="successRoom"></div>
+  <p>Your breakfast selection has been sent to the kitchen. Enjoy your morning!</p>
+  <button class="btn-new-order" onclick="resetForm()">Place another order</button>
+</div>
+
+<!-- ==================== TOAST ==================== -->
+<div class="toast" id="toast"></div>
+
+<!-- ==================== HERO ==================== -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-sub">Good Morning</div>
+    <h1>Breakfast<br><em>Menu</em></h1>
+    <div class="hero-rule"></div>
+    <div class="hero-time">Served daily · 6:30 am – 10:30 am</div>
+  </div>
+</div>
+
+<!-- ==================== GUEST INFO ==================== -->
+<div class="guest-card">
+  <h2>Your Details</h2>
+  <div class="guest-grid">
+    <div class="field-group">
+      <label>Room / Villa</label>
+      <input type="text" id="guestRoom" placeholder="e.g. Villa 101" required>
+    </div>
+    <div class="field-group">
+      <label>Guest Name</label>
+      <input type="text" id="guestName" placeholder="Full name">
+    </div>
+    <div class="field-group">
+      <label>Breakfast Date</label>
+      <input type="date" id="breakfastDate">
+    </div>
+    <div class="field-group">
+      <label>Preferred Time</label>
+      <input type="time" id="prefTime" value="07:00" min="06:30" max="10:00">
+    </div>
+    <div class="field-group">
+      <label>Guests</label>
+      <select id="guestCount">
+        <option>1</option><option>2</option><option>3</option>
+        <option>4</option><option>5</option><option>6+</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== PAGE 1 BEVERAGES ==================== -->
+<div class="page-label">
+  <div class="page-label-line"></div>
+  <div class="page-label-text">Page 1 — Beverages</div>
+  <div class="page-label-line"></div>
+</div>
+<div class="page-limit">★ Please select 2 items for each person from this section ★</div>
+
+<!-- FRESHLY SQUEEZED JUICES -->
+<div class="section-card">
+  <div class="section-head"><div class="section-dot"></div><h3>Freshly Squeezed Juices</h3></div>
+  <div class="section-body">
+    <div class="cb-grid" id="juices">
+      <label class="cb-pill"><input type="checkbox" value="Orange"><div class="pill-check"></div>Orange</label>
+      <label class="cb-pill"><input type="checkbox" value="Pineapple"><div class="pill-check"></div>Pineapple</label>
+      <label class="cb-pill"><input type="checkbox" value="Mango"><div class="pill-check"></div>Mango</label>
+      <label class="cb-pill"><input type="checkbox" value="Cucumber"><div class="pill-check"></div>Cucumber</label>
+      <label class="cb-pill"><input type="checkbox" value="Tomato"><div class="pill-check"></div>Tomato</label>
+      <label class="cb-pill"><input type="checkbox" value="Watermelon"><div class="pill-check"></div>Watermelon</label>
+      <label class="cb-pill"><input type="checkbox" value="Guava"><div class="pill-check"></div>Guava</label>
+      <label class="cb-pill"><input type="checkbox" value="Apple"><div class="pill-check"></div>Apple</label>
+      <label class="cb-pill"><input type="checkbox" value="Carrot"><div class="pill-check"></div>Carrot</label>
+    </div>
+  </div>
+</div>
+
+<!-- SHAKES -->
+<div class="section-card">
+  <div class="section-head"><div class="section-dot"></div><h3>Shakes</h3></div>
+  <div class="section-body">
+    <div class="cb-grid" id="shakes">
+      <label class="cb-pill"><input type="checkbox" value="Banana"><div class="pill-check"></div>Banana</label>
+      <label class="cb-pill"><input type="checkbox" value="Watermelon"><div class="pill-check"></div>Watermelon</label>
+      <label class="cb-pill"><input type="checkbox" value="Pineapple"><div class="pill-check"></div>Pineapple</label>
+      <label class="cb-pill"><input type="checkbox" value="Orange"><div class="pill-check"></div>Orange</label>
+      <label class="cb-pill"><input type="checkbox" value="Mango"><div class="pill-check"></div>Mango</label>
+      <label class="cb-pill"><input type="checkbox" value="Strawberry"><div class="pill-check"></div>Strawberry</label>
+      <label class="cb-pill"><input type="checkbox" value="Mixed Berries"><div class="pill-check"></div>Mixed Berries</label>
+    </div>
+  </div>
+</div>
+
+<!-- MIXED JUICES -->
+<div class="section-card">
+  <div class="section-head"><div class="section-dot"></div><h3>Mixed Juices</h3></div>
+  <div class="section-body">
+    <div class="item-list" id="mixedJuices">
+      <label class="item-row"><input type="checkbox" value="Vitamin C Booster"><div class="item-check"></div><div class="item-text"><div class="item-name">Vitamin C Booster</div><div class="item-desc">Orange, Passion Fruit, Carrot, Pineapple, Lemon</div></div></label>
+      <label class="item-row"><input type="checkbox" value="Green Detox"><div class="item-check"></div><div class="item-text"><div class="item-name">Green Detox</div><div class="item-desc">Green Apple, Pineapple, Celery, Lemon</div></div></label>
+      <label class="item-row"><input type="checkbox" value="Orange Paradise"><div class="item-check"></div><div class="item-text"><div class="item-name">Orange Paradise</div><div class="item-desc">Orange, Pineapple, Green Apple, Carrot</div></div></label>
+      <label class="item-row"><input type="checkbox" value="Yellow Sunshine"><div class="item-check"></div><div class="item-text"><div class="item-name">Yellow Sunshine</div><div class="item-desc">Mango, Orange, Pineapple, Ginger, Lemon</div></div></label>
+      <label class="item-row"><input type="checkbox" value="Red Plus"><div class="item-check"></div><div class="item-text"><div class="item-name">Red Plus</div><div class="item-desc">Beetroot, Pineapple, Carrot, Lemon</div></div></label>
+      <label class="item-row"><input type="checkbox" value="Energy Boost"><div class="item-check"></div><div class="item-text"><div class="item-name">Energy Boost</div><div class="item-desc">Beetroot, Carrot, Red Apple, Green Apple</div></div></label>
+    </div>
+  </div>
+</div>
+
+<!-- SMOOTHIES -->
+<div class="section-card">
+  <div class="section-head"><div class="section-dot"></div><h3>Smoothies</h3></div>
+  <div class="section-body">
+    <div class="item-list" id="smoothies">
+      <label class="item-row"><input type="checkbox" value="Strawberry Diva"><div class="item-check"></div><div class="item-text"><div class="item-name">Strawberry Diva</div><div class="item-desc">Strawberry, Banana, Honey</div></div></label>
+      <label class="item-row"><input type="checkbox" value="Mango A Go Go"><div class="item-check"></div><div class="item-text"><div class="item-name">Mango A Go Go</div><div class="item-desc">Mango, Passion Fruit</div></div></label>
+      <label class="item-row"><input type="checkbox" value="Sweety Sunset"><div class="item-check"></div><div class="item-text"><div class="item-name">Sweety Sunset</div><div class="item-desc">Strawberry, Mango, Banana, Honey</div></div></label>
+      <label class="item-row"><input type="checkbox" value="Pinky Pine"><div class="item-check"></div><div class="item-text"><div class="item-name">Pinky Pine</div><div class="item-desc">Mixed Berries, Pineapple, Honey</div></div></label>
+      <label class="item-row"><input type="checkbox" value="Green Dream"><div class="item-check"></div><div class="item-text"><div class="item-name">Green Dream</div><div class="item-desc">Kiwi, Banana, Honey</div></div></label>
+      <label class="item-row"><input type="checkbox" value="Yellow Magic"><div class="item-check"></div><div class="item-text"><div class="item-name">Yellow Magic</div><div class="item-desc">Mango, Pineapple, Orange</div></div></label>
+    </div>
+  </div>
+</div>
+
+<!-- COFFEE -->
+<div class="inline-section">
+  <span class="inline-label-tag">Coffee</span>
+  <div class="cb-grid" id="coffee" style="flex:1">
+    <label class="cb-pill"><input type="checkbox" value="Regular"><div class="pill-check"></div>Regular</label>
+    <label class="cb-pill"><input type="checkbox" value="Espresso"><div class="pill-check"></div>Espresso</label>
+    <label class="cb-pill"><input type="checkbox" value="Cappuccino"><div class="pill-check"></div>Cappuccino</label>
+    <label class="cb-pill"><input type="checkbox" value="Latte"><div class="pill-check"></div>Latte</label>
+    <label class="cb-pill"><input type="checkbox" value="Macchiato"><div class="pill-check"></div>Macchiato</label>
+  </div>
+</div>
+
+<!-- TEA -->
+<div class="inline-section">
+  <span class="inline-label-tag">Tea</span>
+  <div class="cb-grid" id="tea" style="flex:1">
+    <label class="cb-pill"><input type="checkbox" value="Green Tea Jasmine"><div class="pill-check"></div>Green Tea Jasmine</label>
+    <label class="cb-pill"><input type="checkbox" value="Camomile"><div class="pill-check"></div>Camomile</label>
+    <label class="cb-pill"><input type="checkbox" value="Earl Grey"><div class="pill-check"></div>Earl Grey</label>
+    <label class="cb-pill"><input type="checkbox" value="English Breakfast"><div class="pill-check"></div>English Breakfast</label>
+    <label class="cb-pill"><input type="checkbox" value="Peppermint"><div class="pill-check"></div>Peppermint</label>
+    <label class="cb-pill"><input type="checkbox" value="Thai Milk Tea (Hot)"><div class="pill-check"></div>Thai Milk Tea (Hot)</label>
+    <label class="cb-pill"><input type="checkbox" value="Thai Milk Tea (Iced)"><div class="pill-check"></div>Thai Milk Tea (Iced)</label>
+  </div>
+</div>
+
+<!-- MILK -->
+<div class="inline-section">
+  <span class="inline-label-tag">Milk</span>
+  <div class="cb-grid" id="milk" style="flex:1">
+    <label class="cb-pill"><input type="checkbox" value="Warm"><div class="pill-check"></div>Warm</label>
+    <label class="cb-pill"><input type="checkbox" value="Cold"><div class="pill-check"></div>Cold</label>
+    <label class="cb-pill"><input type="checkbox" value="Full Fat"><div class="pill-check"></div>Full Fat</label>
+    <label class="cb-pill"><input type="checkbox" value="Low Fat"><div class="pill-check"></div>Low Fat</label>
+    <label class="cb-pill"><input type="checkbox" value="Hot Chocolate"><div class="pill-check"></div>Hot Chocolate</label>
+    <label class="cb-pill"><input type="checkbox" value="Soy Milk"><div class="pill-check"></div>Soy Milk</label>
+    <label class="cb-pill"><input type="checkbox" value="Almond Milk"><div class="pill-check"></div>Almond Milk</label>
+    <label class="cb-pill"><input type="checkbox" value="Water"><div class="pill-check"></div>Water</label>
+  </div>
+</div>
+
+<!-- ==================== PAGE 2 FOOD ==================== -->
+<div class="page-label" style="margin-top:1rem">
+  <div class="page-label-line"></div>
+  <div class="page-label-text">Page 2 & 3 — Food</div>
+  <div class="page-label-line"></div>
+</div>
+<div class="page-limit">★ Please select up to 5 items for each person from this section ★</div>
+
+<div id="foodCounter" class="progress-label"><span>Food items selected</span><span id="foodCountNum">0 / 5</span></div>
+<div class="progress-bar-wrap"><div class="progress-bar" id="foodProgress" style="width:0%"></div></div>
+<div style="height:0.75rem"></div>
+
+<!-- CEREALS -->
+<div class="section-card">
+  <div class="section-head"><div class="section-dot"></div><h3>Cereals</h3></div>
+  <div class="section-body">
+    <div class="cb-grid food-item" id="cereals">
+      <label class="cb-pill"><input type="checkbox" value="Koko Krunch"><div class="pill-check"></div>Koko Krunch</label>
+      <label class="cb-pill"><input type="checkbox" value="Corn Flakes"><div class="pill-check"></div>Corn Flakes</label>
+      <label class="cb-pill"><input type="checkbox" value="Muesli"><div class="pill-check"></div>Muesli</label>
+      <label class="cb-pill"><input type="checkbox" value="Hot Oat Porridge"><div class="pill-check"></div>Hot Oat Porridge</label>
+    </div>
+    <div class="sub-label" style="margin-top:10px">With milk</div>
+    <div class="filling-grid" id="cerealMilk">
+      <label class="filling-pill"><input type="checkbox" value="Warm"><div class="fp-check"></div>Warm</label>
+      <label class="filling-pill"><input type="checkbox" value="Cold"><div class="fp-check"></div>Cold</label>
+      <label class="filling-pill"><input type="checkbox" value="Full Fat"><div class="fp-check"></div>Full Fat</label>
+      <label class="filling-pill"><input type="checkbox" value="Low Fat"><div class="fp-check"></div>Low Fat</label>
+      <label class="filling-pill"><input type="checkbox" value="Soy Milk"><div class="fp-check"></div>Soy Milk</label>
+      <label class="filling-pill"><input type="checkbox" value="Almond Milk"><div class="fp-check"></div>Almond Milk</label>
+      <label class="filling-pill"><input type="checkbox" value="Water"><div class="fp-check"></div>Water</label>
+    </div>
+  </div>
+</div>
+
+<!-- YOGHURTS -->
+<div class="section-card">
+  <div class="section-head"><div class="section-dot"></div><h3>Yoghurts</h3></div>
+  <div class="section-body">
+    <div class="cb-grid food-item" id="yoghurts">
+      <label class="cb-pill"><input type="checkbox" value="Plain Yoghurt"><div class="pill-check"></div>Plain Yoghurt</label>
+      <label class="cb-pill"><input type="checkbox" value="Strawberry Yoghurt"><div class="pill-check"></div>Strawberry</label>
+      <label class="cb-pill"><input type="checkbox" value="Mixed Fruits Yoghurt"><div class="pill-check"></div>Mixed Fruits</label>
+    </div>
+  </div>
+</div>
+
+<!-- SEASONAL FRUIT PLATTER -->
+<div class="section-card">
+  <div class="section-head"><div class="section-dot"></div><h3>Seasonal Fresh Fruit Platter</h3></div>
+  <div class="section-body">
+    <div class="cb-grid food-item" id="fruits">
+      <label class="cb-pill"><input type="checkbox" value="Banana"><div class="pill-check"></div>Banana</label>
+      <label class="cb-pill"><input type="checkbox" value="Pineapple"><div class="pill-check"></div>Pineapple</label>
+      <label class="cb-pill"><input type="checkbox" value="Watermelon"><div class="pill-check"></div>Watermelon</label>
+      <label class="cb-pill"><input type="checkbox" value="Papaya"><div class="pill-check"></div>Papaya</label>
+      <label class="cb-pill"><input type="checkbox" value="Dragon Fruits"><div class="pill-check"></div>Dragon Fruits</label>
+      <label class="cb-pill"><input type="checkbox" value="Avocado"><div class="pill-check"></div>Avocado</label>
+    </div>
+  </div>
+</div>
+
+<!-- BAKERY -->
+<div class="section-card">
+  <div class="section-head"><div class="section-dot"></div><h3>Bakery</h3></div>
+  <div class="section-body">
+    <div class="sub-label">Cheese</div>
+    <div class="cb-grid food-item" id="cheeses">
+      <label class="cb-pill"><input type="checkbox" value="Soft Brie Cheese"><div class="pill-check"></div>Soft Brie</label>
+      <label class="cb-pill"><input type="checkbox" value="Medium Cheddar Cheese"><div class="pill-check"></div>Medium Cheddar</label>
+    </div>
+    <div class="sub-label">Bread &amp; Pastry</div>
+    <div class="cb-grid food-item" id="bread">
+      <label class="cb-pill"><input type="checkbox" value="Brown Bread"><div class="pill-check"></div>Brown Bread</label>
+      <label class="cb-pill"><input type="checkbox" value="White Bread"><div class="pill-check"></div>White Bread</label>
+      <label class="cb-pill"><input type="checkbox" value="Sourdough Bread"><div class="pill-check"></div>Sourdough</label>
+      <label class="cb-pill"><input type="checkbox" value="Brown Toasted"><div class="pill-check"></div>Brown Toasted</label>
+      <label class="cb-pill"><input type="checkbox" value="White Toasted"><div class="pill-check"></div>White Toasted</label>
+      <label class="cb-pill"><input type="checkbox" value="Plain Croissant"><div class="pill-check"></div>Plain Croissant</label>
+      <label class="cb-pill"><input type="checkbox" value="Chocolate Croissant"><div class="pill-check"></div>Choc Croissant</label>
+      <label class="cb-pill"><input type="checkbox" value="Danish Pastry"><div class="pill-check"></div>Danish Pastry</label>
+      <label class="cb-pill"><input type="checkbox" value="Baguette"><div class="pill-check"></div>Baguette</label>
+      <label class="cb-pill"><input type="checkbox" value="Muffin"><div class="pill-check"></div>Muffin</label>
+    </div>
+    <div class="sub-label">Spread / Condiment</div>
+    <div class="filling-grid" id="spreads">
+      <label class="filling-pill"><input type="checkbox" value="Butter"><div class="fp-check"></div>Butter</label>
+      <label class="filling-pill"><input type="checkbox" value="Strawberry Jam"><div class="fp-check"></div>Strawberry Jam</label>
+      <label class="filling-pill"><input type="checkbox" value="Marmalade Jam"><div class="fp-check"></div>Marmalade</label>
+      <label class="filling-pill"><input type="checkbox" value="Pineapple Jam"><div class="fp-check"></div>Pineapple Jam</label>
+      <label class="filling-pill"><input type="checkbox" value="Honey"><div class="fp-check"></div>Honey</label>
+    </div>
+  </div>
+</div>
+
+<!-- EGGS -->
+<div class="section-card">
+  <div class="section-head"><div class="section-dot"></div><h3>Fresh Farm Eggs &amp; Omelettes</h3></div>
+  <div class="section-body">
+    <div class="sub-label">Eggs</div>
+    <div class="item-list food-item" id="eggs">
+      <label class="item-row"><input type="checkbox" value="Boiled Eggs"><div class="item-check"></div><div class="item-text"><div class="item-name">Boiled Eggs</div></div></label>
+      <div id="boiledMinutesWrap" style="display:none;padding-left:26px">
+        <input type="text" class="eggs-note-input" id="boiledMinutes" placeholder="How many minutes? (e.g. 4 min soft, 8 min hard)">
+      </div>
+      <label class="item-row"><input type="checkbox" value="Fried Eggs"><div class="item-check"></div><div class="item-text"><div class="item-name">Fried Eggs</div></div></label>
+      <label class="item-row"><input type="checkbox" value="Scrambled Eggs (soft)"><div class="item-check"></div><div class="item-text"><div class="item-name">Scrambled Eggs</div><div class="item-desc">Soft</div></div></label>
+      <label class="item-row"><input type="checkbox" value="Scrambled Eggs (hard)"><div class="item-check"></div><div class="item-text"><div class="item-name">Scrambled Eggs</div><div class="item-desc">Hard</div></div></label>
+      <label class="item-row"><input type="checkbox" value="Poached Eggs (soft)"><div class="item-check"></div><div class="item-text"><div class="item-name">Poached Eggs</div><div class="item-desc">Soft</div></div></label>
+      <label class="item-row"><input type="checkbox" value="Poached Eggs (hard)"><div class="item-check"></div><div class="item-text"><div class="item-name">Poached Eggs</div><div class="item-desc">Hard</div></div></label>
+    </div>
+
+    <div class="sub-label" style="margin-top:10px">Omelette — Regular</div>
+    <div class="cb-grid food-item" style="margin-bottom:6px" id="omlRegular">
+      <label class="cb-pill"><input type="checkbox" value="Regular Omelette"><div class="pill-check"></div>Regular Omelette</label>
+    </div>
+    <div class="sub-label">With fillings</div>
+    <div class="filling-grid" id="omlRegFillings">
+      <label class="filling-pill"><input type="checkbox" value="Ham"><div class="fp-check"></div>Ham</label>
+      <label class="filling-pill"><input type="checkbox" value="Cheese"><div class="fp-check"></div>Cheese</label>
+      <label class="filling-pill"><input type="checkbox" value="Tomato"><div class="fp-check"></div>Tomato</label>
+      <label class="filling-pill"><input type="checkbox" value="Onions"><div class="fp-check"></div>Onions</label>
+      <label class="filling-pill"><input type="checkbox" value="Mushrooms"><div class="fp-check"></div>Mushrooms</label>
+    </div>
+
+    <div class="sub-label" style="margin-top:10px">Omelette — Thai</div>
+    <div class="cb-grid food-item" style="margin-bottom:6px" id="omlThai">
+      <label class="cb-pill"><input type="checkbox" value="Thai Omelette"><div class="pill-check"></div>Thai Omelette</label>
+    </div>
+    <div class="sub-label">With fillings</div>
+    <div class="filling-grid" id="omlThaiFillings">
+      <label class="filling-pill"><input type="checkbox" value="Pork"><div class="fp-check"></div>Pork</label>
+      <label class="filling-pill"><input type="checkbox" value="Chicken"><div class="fp-check"></div>Chicken</label>
+      <label class="filling-pill"><input type="checkbox" value="Tomato"><div class="fp-check"></div>Tomato</label>
+      <label class="filling-pill"><input type="checkbox" value="Onions"><div class="fp-check"></div>Onions</label>
+      <label class="filling-pill"><input type="checkbox" value="Mushrooms"><div class="fp-check"></div>Mushrooms</label>
+    </div>
+
+    <div class="sub-label" style="margin-top:10px">Side Orders</div>
+    <div class="filling-grid" id="sideOrders">
+      <label class="filling-pill"><input type="checkbox" value="Bacon"><div class="fp-check"></div>Bacon</label>
+      <label class="filling-pill"><input type="checkbox" value="Sausage"><div class="fp-check"></div>Sausage</label>
+      <label class="filling-pill"><input type="checkbox" value="Baked Beans"><div class="fp-check"></div>Baked Beans</label>
+      <label class="filling-pill"><input type="checkbox" value="Grilled Tomatoes"><div class="fp-check"></div>Grilled Tomatoes</label>
+      <label class="filling-pill"><input type="checkbox" value="Mixed Salad"><div class="fp-check"></div>Mixed Salad</label>
+    </div>
+  </div>
+</div>
+
+<!-- ASIAN BREAKFAST -->
+<div class="section-card">
+  <div class="section-head"><div class="section-dot"></div><h3>Asian Breakfast</h3></div>
+  <div class="section-body">
+    <div class="item-list food-item" id="asian">
+      <label class="item-row"><input type="checkbox" value="Fried Rice"><div class="item-check"></div><div class="item-text"><div class="item-name">Fried Rice</div></div></label>
+      <label class="item-row"><input type="checkbox" value="Rice Porridge"><div class="item-check"></div><div class="item-text"><div class="item-name">Rice Porridge</div></div></label>
+      <label class="item-row"><input type="checkbox" value="Vermicelli Noodle Soup"><div class="item-check"></div><div class="item-text"><div class="item-name">Vermicelli Noodle Soup</div></div></label>
+      <label class="item-row"><input type="checkbox" value="Yellow Noodle Soup"><div class="item-check"></div><div class="item-text"><div class="item-name">Yellow Noodle Soup</div></div></label>
+      <label class="item-row"><input type="checkbox" value="Flat Noodle Soup"><div class="item-check"></div><div class="item-text"><div class="item-name">Flat Noodle Soup</div></div></label>
+    </div>
+    <div id="flatNoodleWrap" style="display:none; padding-top:6px">
+      <div class="sub-label">Flat Noodle — Protein</div>
+      <div class="filling-grid" id="flatNoodleProtein">
+        <label class="filling-pill"><input type="checkbox" value="Chicken"><div class="fp-check"></div>Chicken</label>
+        <label class="filling-pill"><input type="checkbox" value="Pork"><div class="fp-check"></div>Pork</label>
+        <label class="filling-pill"><input type="checkbox" value="Prawns"><div class="fp-check"></div>Prawns</label>
+        <label class="filling-pill"><input type="checkbox" value="Seafood"><div class="fp-check"></div>Seafood</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SEAFOOD & COLD CUTS -->
+<div class="section-card">
+  <div class="section-head"><div class="section-dot"></div><h3>Seafood &amp; Cold Cuts</h3></div>
+  <div class="section-body">
+    <div class="cb-grid food-item" id="seafoodColdCuts">
+      <label class="cb-pill"><input type="checkbox" value="Grilled Salmon"><div class="pill-check"></div>Grilled Salmon</label>
+      <label class="cb-pill"><input type="checkbox" value="Grilled Shrimps"><div class="pill-check"></div>Grilled Shrimps</label>
+      <label class="cb-pill"><input type="checkbox" value="Salami Bolzano"><div class="pill-check"></div>Salami Bolzano</label>
+      <label class="cb-pill"><input type="checkbox" value="Salami Pork Loin"><div class="pill-check"></div>Salami Pork Loin</label>
+      <label class="cb-pill"><input type="checkbox" value="Toasted Ham"><div class="pill-check"></div>Toasted Ham</label>
+    </div>
+  </div>
+</div>
+
+<!-- WAFFLES -->
+<div class="section-card">
+  <div class="section-head"><div class="section-dot"></div><h3>Waffles</h3></div>
+  <div class="section-body">
+    <div class="item-list food-item" id="waffles">
+      <label class="item-row"><input type="checkbox" value="Double Choco Mango Waffle"><div class="item-check"></div><div class="item-text"><div class="item-name">Double Choco Mango Waffle</div><div class="item-desc">Chocolate waffle, fresh mango, passion fruit &amp; chocolate sauce</div></div></label>
+      <label class="item-row"><input type="checkbox" value="Choc Chip Banana Waffle"><div class="item-check"></div><div class="item-text"><div class="item-name">Choc Chip Banana Waffle</div><div class="item-desc">Oat &amp; chocolate chip waffle, fresh banana, almond chips &amp; maple syrup</div></div></label>
+      <label class="item-row"><input type="checkbox" value="Sweet Avocado Smash Waffle"><div class="item-check"></div><div class="item-text"><div class="item-name">Sweet Avocado Smash Waffle</div><div class="item-desc">Sweet potato waffle, mashed avocado, sunny side up egg &amp; vegetable garnish</div></div></label>
+      <label class="item-row"><input type="checkbox" value="The Hearty Autumn Apple Waffle"><div class="item-check"></div><div class="item-text"><div class="item-name">The Hearty Autumn Apple Waffle</div><div class="item-desc">Apple cider waffle, caramelized apple, pecan nuts &amp; maple syrup</div></div></label>
+    </div>
+  </div>
+</div>
+
+<!-- PANCAKES -->
+<div class="section-card">
+  <div class="section-head"><div class="section-dot"></div><h3>Pancakes</h3></div>
+  <div class="section-body">
+    <div class="item-list food-item" id="pancakes">
+      <label class="item-row"><input type="checkbox" value="Blueberry Dream Pancake"><div class="item-check"></div><div class="item-text"><div class="item-name">Blueberry Dream</div><div class="item-desc">Blueberry pancake, fresh blueberry, banana &amp; maple syrup</div></div></label>
+      <label class="item-row"><input type="checkbox" value="Cinnamon Roll Pancake"><div class="item-check"></div><div class="item-text"><div class="item-name">Cinnamon Roll</div><div class="item-desc">Cinnamon roll pancake with cinnamon cream cheese sauce</div></div></label>
+      <label class="item-row"><input type="checkbox" value="Breakfast Bindaetteok Pancake"><div class="item-check"></div><div class="item-text"><div class="item-name">Breakfast Bindaetteok</div><div class="item-desc">Korean pancake, mung bean flour, napa cabbage kimchi, spring onions &amp; Gochujang sauce</div></div></label>
+      <label class="item-row"><input type="checkbox" value="Pumpkin Pancake"><div class="item-check"></div><div class="item-text"><div class="item-name">Pumpkin Pancake</div><div class="item-desc">Pumpkin pancake with cinnamon &amp; nutmeg, cooked apples &amp; maple syrup</div></div></label>
+    </div>
+  </div>
+</div>
+
+<!-- SMOOTHIE BOWLS -->
+<div class="section-card">
+  <div class="section-head"><div class="section-dot"></div><h3>Smoothie Bowls</h3></div>
+  <div class="section-body">
+    <div class="item-list food-item" id="smoothieBowls">
+      <label class="item-row"><input type="checkbox" value="Pink Sunset Smoothie Bowl"><div class="item-check"></div><div class="item-text"><div class="item-name">Pink Sunset</div><div class="item-desc">Strawberry, mango, banana &amp; honey. Topped with strawberry, banana, blueberry, chia seeds &amp; almonds</div></div></label>
+      <label class="item-row"><input type="checkbox" value="Yellow Summer Smoothie Bowl"><div class="item-check"></div><div class="item-text"><div class="item-name">Yellow Summer</div><div class="item-desc">Mango, passion fruit, banana &amp; honey. Topped with mango, passion fruit, strawberry, chia seeds &amp; almonds</div></div></label>
+      <label class="item-row"><input type="checkbox" value="Berry Boost Smoothie Bowl"><div class="item-check"></div><div class="item-text"><div class="item-name">Berry Boost</div><div class="item-desc">Blueberry, raspberry, strawberry, banana &amp; honey. Topped with blueberry, strawberry, mango, chia seeds &amp; almonds</div></div></label>
+      <label class="item-row"><input type="checkbox" value="Choco Banana Smoothie Bowl"><div class="item-check"></div><div class="item-text"><div class="item-name">Choco Banana</div><div class="item-desc">Banana, strawberry, chocolate powder &amp; almond milk. Topped with banana, strawberry, corn flakes, muesli &amp; almonds</div></div></label>
+    </div>
+    <div class="sub-label" style="margin-top:10px">Design your name on the bowl (max 6 letters)</div>
+    <input type="text" class="bowl-letters" id="bowlLetters" maxlength="6" placeholder="e.g. HELLO">
+  </div>
+</div>
+
+<!-- SPECIAL REQUESTS -->
+<div class="section-card">
+  <div class="section-head"><div class="section-dot"></div><h3>Special Requests / Allergies</h3></div>
+  <div class="section-body">
+    <textarea id="specialRequests" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text);background:var(--cream);outline:none;resize:vertical;min-height:70px;" placeholder="Any dietary requirements, allergies, or special requests..."></textarea>
+  </div>
+</div>
+
+<!-- SUBMIT -->
+<div class="submit-wrap">
+  <button class="btn-submit" id="submitBtn" onclick="submitOrder()">
+    <span id="btnText">Send Order to Kitchen</span>
+  </button>
+  <div class="submit-note">Your order will be confirmed by our team</div>
+  <button onclick="testConnection()" style="margin-top:4px;background:none;border:1px solid var(--border);border-radius:8px;padding:7px 18px;font-size:12px;color:var(--text-muted);font-family:'DM Sans',sans-serif;cursor:pointer;width:100%;max-width:400px;">
+    🔌 Test connection to Google Sheets
+  </button>
+</div>
+
+<script>
+  // ===================== CONFIG =====================
+  // PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL BELOW:
+  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyd9Tq1Y9cEqJ35aPrIC_2jFxotr-OVCef2NdQvgpkqSa1DNuZy-rHNTmIQpwDvvJAm/exec';
+
+
+
+  // ===================== CHECKBOX ACTIVATION =====================
+  document.querySelectorAll('.cb-pill, .item-row, .filling-pill').forEach(el => {
+    el.addEventListener('change', function() {
+      const cb = this.querySelector('input[type=checkbox]');
+      if (cb) {
+        this.classList.toggle('active', cb.checked);
+        updateFoodCounter();
+        handleConditional(cb);
+      }
+    });
+  });
+
+  // ===================== CONDITIONAL REVEALS =====================
+  function handleConditional(cb) {
+    if (cb.value === 'Boiled Eggs') {
+      document.getElementById('boiledMinutesWrap').style.display = cb.checked ? 'block' : 'none';
+    }
+    if (cb.value === 'Flat Noodle Soup') {
+      document.getElementById('flatNoodleWrap').style.display = cb.checked ? 'block' : 'none';
+    }
+  }
+
+  // ===================== FOOD COUNTER =====================
+  const foodSectionIds = ['cereals','yoghurts','fruits','cheeses','bread','eggs','omlRegular','omlThai','asian','seafoodColdCuts','waffles','pancakes','smoothieBowls'];
+
+  function updateFoodCounter() {
+    let count = 0;
+    foodSectionIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) count += el.querySelectorAll('input[type=checkbox]:checked').length;
+    });
+    const num = document.getElementById('foodCountNum');
+    const bar = document.getElementById('foodProgress');
+    if (num) num.textContent = count + ' / 5';
+    if (bar) bar.style.width = Math.min(count / 5 * 100, 100) + '%';
+    return count;
+  }
+
+  // ===================== DATA HELPERS =====================
+  function getChecked(id) {
+    const el = document.getElementById(id);
+    if (!el) return '';
+    return Array.from(el.querySelectorAll('input[type=checkbox]:checked')).map(c=>c.value).join(', ');
+  }
+
+  // ===================== SUBMIT =====================
+  async function submitOrder() {
+    const room = document.getElementById('guestRoom').value.trim();
+    const time = document.getElementById('prefTime').value;
+    if (time < '06:30' || time > '10:00') 
+    {showToast('Please select a time between 6:30 and 10:00 AM');
+    return;}
+    const name = document.getElementById('guestName').value.trim();
+    if (!room) { showToast('Please enter your room or villa number'); return; }
+
+    const btn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    btn.disabled = true;
+    btnText.innerHTML = '';
+    const spinner = document.createElement('div');
+    spinner.className = 'spinner';
+    btn.appendChild(spinner);
+
+    const boiledMin = document.getElementById('boiledMinutes').value.trim();
+    const flatProtein = getChecked('flatNoodleProtein');
+    const omlRegFill = getChecked('omlRegFillings');
+    const omlThaiFill = getChecked('omlThaiFillings');
+    const sides = getChecked('sideOrders');
+    const cerealMilk = getChecked('cerealMilk');
+    const spreads = getChecked('spreads');
+    const bowlLetters = document.getElementById('bowlLetters').value.trim().toUpperCase();
+    const specialReq = document.getElementById('specialRequests').value.trim();
+
+    const payload = {
+      timestamp: new Date().toLocaleString('en-GB'),
+      room,
+      name,
+      guests: document.getElementById('guestCount').value,
+      breakfast_date: document.getElementById('breakfastDate').value,
+      preferred_time: document.getElementById('prefTime').value,
+      juices: getChecked('juices'),
+      shakes: getChecked('shakes'),
+      mixed_juices: getChecked('mixedJuices'),
+      smoothies: getChecked('smoothies'),
+      coffee: getChecked('coffee'),
+      tea: getChecked('tea'),
+      milk: getChecked('milk'),
+      cereals: getChecked('cereals'),
+      cereal_milk: cerealMilk,
+      yoghurts: getChecked('yoghurts'),
+      fruits: getChecked('fruits'),
+      cheeses: getChecked('cheeses'),
+      bread: getChecked('bread'),
+      spreads,
+      eggs: getChecked('eggs'),
+      boiled_minutes: boiledMin,
+      omelette_regular: getChecked('omlRegular'),
+      omelette_regular_fillings: omlRegFill,
+      omelette_thai: getChecked('omlThai'),
+      omelette_thai_fillings: omlThaiFill,
+      side_orders: sides,
+      asian: getChecked('asian'),
+      flat_noodle_protein: flatProtein,
+      seafood_coldcuts: getChecked('seafoodColdCuts'),
+      waffles: getChecked('waffles'),
+      pancakes: getChecked('pancakes'),
+      smoothie_bowls: getChecked('smoothieBowls'),
+      bowl_letters: bowlLetters,
+      special_requests: specialReq
+    };
+
+    try {
+      // ── DEMO MODE (no URL set yet) ──────────────────────────
+      if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+        await new Promise(r => setTimeout(r, 1200));
+        showSuccess(room || name);
+        return;
+      }
+
+      // ── BASIC URL SANITY CHECK ──────────────────────────────
+      if (!GOOGLE_SCRIPT_URL.startsWith('https://script.google.com/macros/')) {
+        throw new Error('BAD_URL');
+      }
+
+      // ── SEND ORDER ──────────────────────────────────────────
+      // We use no-cors because Google Apps Script does not send
+      // CORS headers. This means we cannot read the response,
+      // but the request DOES reach Google and the order IS saved.
+      // A network error (wrong URL, no internet) throws an exception
+      // which we catch below.
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      // If fetch didn't throw, the request reached Google — success.
+      showSuccess(room || name);
+
+    } catch(err) {
+      btn.disabled = false;
+      btnText.textContent = 'Send Order to Kitchen';
+      spinner.remove();
+
+      // Give a specific message depending on what went wrong
+      if (err.message === 'BAD_URL') {
+        showToast('❌ URL looks wrong — check it starts with https://script.google.com/macros/');
+      } else if (!navigator.onLine) {
+        showToast('❌ No internet connection — please check WiFi and try again');
+      } else {
+        // Most likely cause: URL is wrong or deployment settings are incorrect
+        showToast('❌ Could not reach Google — check your URL is correct and redeployed');
+        console.error('Submit error:', err);
+      }
+    }
+  }
+
+  function showSuccess(identifier) {
+    const screen = document.getElementById('successScreen');
+    document.getElementById('successRoom').textContent = identifier;
+    screen.classList.add('show');
+    window.scrollTo(0,0);
+  }
+
+  function resetForm() {
+    document.querySelectorAll('input[type=checkbox]').forEach(c => {
+      c.checked = false;
+      const parent = c.closest('.cb-pill, .item-row, .filling-pill');
+      if (parent) parent.classList.remove('active');
+    });
+    document.querySelectorAll('input[type=text], input[type=time], textarea').forEach(el => {
+      if (el.type === 'time') el.value = '08:00';
+      else el.value = '';
+    });
+    document.getElementById('guestCount').value = '1';
+    document.getElementById('boiledMinutesWrap').style.display = 'none';
+    document.getElementById('flatNoodleWrap').style.display = 'none';
+    updateFoodCounter();
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = false;
+    document.getElementById('btnText').textContent = 'Send Order to Kitchen';
+    btn.querySelectorAll('.spinner').forEach(s=>s.remove());
+
+    document.getElementById('successScreen').classList.remove('show');
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 4000);
+  }
+
+  // ===================== CONNECTION TEST =====================
+  async function testConnection() {
+    if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+      showToast('⚠️ No URL set yet — paste your Google Apps Script URL into the HTML file first');
+      return;
+    }
+    showToast('🔄 Testing connection...');
+    try {
+      // A GET request to the script URL returns a readable response (unlike POST no-cors)
+      const resp = await fetch(GOOGLE_SCRIPT_URL, { method: 'GET', mode: 'cors' });
+      const text = await resp.text();
+      if (text.includes('running')) {
+        showToast('✅ Connected! Google Sheets is ready to receive orders.');
+      } else {
+        showToast('⚠️ Got a response but it looks unexpected. Check your deployment.');
+      }
+    } catch(err) {
+      if (!navigator.onLine) {
+        showToast('❌ No internet connection detected');
+      } else {
+        showToast('❌ Cannot reach Google — URL may be wrong or deployment needs "Anyone" access');
+      }
+    }
+  }
+</script>
+</body>
+</html>

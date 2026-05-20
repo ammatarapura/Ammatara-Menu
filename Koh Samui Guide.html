@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ammatara Pura Pool Villa - Guest Guide</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm 15mm;
+            @bottom-right {
+                content: counter(page);
+                font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                font-size: 9pt;
+                color: #8B2020;
+            }
+            @bottom-left {
+                content: "Ammatara Pura Pool Villa • Guest Guide";
+                font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                font-size: 9pt;
+                color: #C0392B;
+            }
+        }
+        
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: #333333;
+            line-height: 1.5;
+            font-size: 10.5pt;
+            margin: 0;
+            padding: 0;
+            background-color: #fcfbfa;
+        }
+
+        h1, h2, h3, h4 {
+            color: #5c1d1d;
+            margin-top: 0;
+            font-weight: 700;
+        }
+
+        h1 {
+            font-size: 26pt;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 16pt;
+            border-bottom: 2px solid #C0392B;
+            padding-bottom: 5px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            page-break-after: avoid;
+        }
+
+        h3 {
+            font-size: 13pt;
+            margin-bottom: 5px;
+            color: #5c1d1d;
+            page-break-after: avoid;
+        }
+
+        .subtitle {
+            font-style: italic;
+            color: #C0392B;
+            font-size: 12pt;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .welcome-section {
+            background-color: #f4efe9;
+            border-left: 4px solid #5c1d1d;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+
+        .welcome-section p {
+            margin: 0 0 10px 0;
+        }
+        .welcome-section p:last-child {
+            margin-bottom: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+            page-break-inside: avoid;
+        }
+
+        th {
+            background-color: #5c1d1d;
+            color: #ffffff;
+            text-align: left;
+            padding: 10px;
+            font-size: 10pt;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #e6dfd5;
+            font-size: 10pt;
+            vertical-align: top;
+        }
+
+        tr:nth-child(even) td {
+            background-color: #f9f7f3;
+        }
+
+        .quick-ref-table td {
+            width: 50%;
+        }
+
+        .attraction-block {
+            margin-bottom: 25px;
+            background: #ffffff;
+            border: 1px solid #e6dfd5;
+            border-radius: 6px;
+            padding: 15px 20px;
+            page-break-inside: avoid;
+        }
+
+        .attraction-header {
+            border-bottom: 1px solid #f4efe9;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+
+        .attraction-title {
+            font-size: 13pt;
+            font-weight: bold;
+            color: #5c1d1d;
+            display: inline-block;
+        }
+
+        .attraction-meta {
+            float: right;
+            font-size: 9.5pt;
+            color: #8c7662;
+            font-weight: bold;
+            background-color: #f4efe9;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .attraction-tags {
+            font-size: 9pt;
+            color: #d4af37;
+            font-style: italic;
+            margin-top: 2px;
+            font-weight: 600;
+        }
+
+        .highlights-label {
+            font-weight: bold;
+            font-size: 10pt;
+            color: #5c1d1d;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+        .highlights-list {
+            margin: 0;
+            padding-left: 20px;
+            font-size: 10pt;
+        }
+
+        .highlights-list li {
+            margin-bottom: 4px;
+        }
+
+        .tip-box {
+            background-color: #fde5d1;
+            border-left: 3px solid #923f3698;
+            padding: 8px 12px;
+            margin-top: 10px;
+            font-size: 9.5pt;
+            font-style: italic;
+            color: #5c4a37;
+        }
+
+        .clear {
+            clear: both;
+        }
+
+        .footer-info {
+            text-align: center;
+            font-size: 10pt;
+            color: #8c7662;
+            margin-top: 40px;
+            border-top: 1px solid #e6dfd5;
+            padding-top: 20px;
+            page-break-inside: avoid;
+        }
+        
+        .app-list {
+            font-weight: bold;
+            color: #5c1d1d;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome to Ammatara Pura Pool Villa</h1>
+    <div class="subtitle">Where ancient Thai spirit meets island serenity</div>
+
+    <div class="welcome-section">
+        <p><strong>Dear Valued Guest,</strong></p>
+        <p>We are delighted to welcome you to Ammatara Pura Pool Villa, a luxury pool villas inspired by the timeless grandeur of ancient Siam, beautifully nestled directly on the shores of Lamai Beach, Koh Samui. Our name, meaning 'city of immortals', reflects our commitment to creating an extraordinary, timeless experience for every guest.</p>
+        <p>This guide is your personal companion to Koh Samui, hand-curated by our team to help you discover the island's finest beaches, temples, waterfalls, dining, and hidden gems. Sawadee kha / Sawadee krub!</p>
+    </div>
+
+    <h2>Hotel Quick Reference</h2>
+    <table class="quick-ref-table">
+        <tr>
+            <td><strong>Check-in / Check-out:</strong><br>2:00 PM / 12:00 PM noon</td>
+            <td><strong>Concierge WhatsApp:</strong><br>+66 (0)616649545</td>
+        </tr>
+        <tr>
+            <td><strong>Breakfast:</strong><br>06:30 - 10:00<br>At Breakfast Restaurant</td>
+            <td><strong>Beachfront Restaurant:</strong><br>10:00 - 22:00 (Last Order: 21:30)</td>
+        </tr>
+    </table>
+
+    <h2>Koh Samui Top Tourist Attractions</h2>
+    <p>From world-class beaches and sacred temples to hidden jungle gardens and remote islands, Koh Samui has something extraordinary for every traveller. Below are our top 10 hand-curated spots across the island.</p>
+
+    <div class="attraction-block">
+        <div class="attraction-header">
+            <div class="attraction-title">1. Lamai Beach</div>
+            <div class="attraction-meta">Located at Our Doorstep</div>
+            <div class="clear"></div>
+            <div class="attraction-tags">Beach • Relaxation • Natural Landmarks</div>
+        </div>
+        <p>Right outside your villa, Lamai Beach offers a beautiful, laid-back atmosphere with a calmer environment and fewer crowds than neighboring Chaweng. The beach is elegantly framed by smooth granite boulders at its southern end, where you'll find the famous Hin Ta & Hin Yai (Grandmother & Grandfather Rocks)—naturally sculpted rock formations that have become one of Samui's most photographed landmarks.</p>
+        <div class="highlights-label">Highlights:</div>
+        <ul class="highlights-list">
+            <li>Hin Ta & Hin Yai Rocks — Free entry, worth a 30-minute visit</li>
+            <li>Calmer sea conditions, excellent for relaxed, casual swimming</li>
+            <li>Lamai Night Plaza for evening local dining and refreshing cold beers</li>
+            <li>Several affordable beachside massage shacks right along the shore (from ฿200/hour)</li>
+            <li>ATV and go-kart tracks nearby for adventure seekers</li>
+        </ul>
+        <div class="tip-box">
+            <strong>Local Tip:</strong> The Hin Ta & Hin Yai rocks are best photographed in the golden morning light before the daily tour groups arrive.
+        </div>
+    </div>
+
+    <div class="attraction-block">
+        <div class="attraction-header">
+            <div class="attraction-title">2. Chaweng Beach</div>
+            <div class="attraction-meta">~13 km from hotel</div>
+            <div class="clear"></div>
+            <div class="attraction-tags">Beach • Nightlife • Watersports</div>
+        </div>
+        <p>Koh Samui's longest and most famous beach stretches nearly 7 km of powdery white sand along the east coast. The crystal-clear turquoise water is ideal for swimming from December to April. By day it's buzzing with jet skis, parasailing, and vibrant beachside sun loungers; by night, the strip transforms into one of Thailand's most energetic dining and nightlife hubs.</p>
+        <div class="highlights-label">Highlights:</div>
+        <ul class="highlights-list">
+            <li>Best swimming: Central Chaweng, safely away from the northern rocks</li>
+            <li>Watersports: Jet ski, parasailing, banana boat, and snorkelling gear rentals</li>
+            <li>Beach clubs: Ark Bar and Samui Beach Club — great for lively sunset cocktails</li>
+            <li>Shopping & Dining: Central Festival Mall alongside dozens of local street-food stalls</li>
+            <li>Night market: Chaweng Walking Street runs nightly starting from 18:00</li>
+        </ul>
+        <div class="tip-box">
+            <strong>Local Tip:</strong> Arrive before 09:00 to secure a premium shaded sun lounger and beat the midday crowds.
+        </div>
+    </div>
+
+    <div class="attraction-block">
+        <div class="attraction-header">
+            <div class="attraction-title">3. Big Buddha Temple (Wat Phra Yai)</div>
+            <div class="attraction-meta">~18 km from hotel</div>
+            <div class="clear"></div>
+            <div class="attraction-tags">Temple • Culture • Iconic Landmark</div>
+        </div>
+        <p>One of Koh Samui's most iconic landmarks, this magnificent 12-metre golden Buddha sits atop a small island (Koh Fan) connected to the mainland by a short causeway. Built in 1972, the statue proudly faces the sea and can be seen from miles away. The temple complex is active and deeply spiritually significant, with resident monks and regular ceremonies.</p>
+        <div class="highlights-label">Highlights:</div>
+        <ul class="highlights-list">
+            <li>Free entry — open daily from 06:00 to 18:00</li>
+            <li>Spectacular photo opportunities, especially during the sunset golden hour</li>
+            <li>Two smaller temples flank the main staircase — well worth exploring</li>
+            <li>Souvenir stalls line the causeway selling amulets, authentic Thai handicrafts, and coconut snacks</li>
+            <li>Can be easily combined with a visit to Wat Plai Laem nearby (just 500 m away)</li>
+        </ul>
+        <div class="tip-box">
+            <strong>Local Tip:</strong> Dress modestly by covering shoulders and knees. Compliant sarongs are available to borrow at the entrance.
+        </div>
+    </div>
+
+    <div class="attraction-block">
+        <div class="attraction-header">
+            <div class="attraction-title">4. Wat Plai Laem</div>
+            <div class="attraction-meta">~18 km from hotel</div>
+            <div class="clear"></div>
+            <div class="attraction-tags">Temple • Architecture • Photography</div>
+        </div>
+        <p>A stunning and relatively modern Buddhist temple that has quickly become one of Samui's most photographed cultural sites. The centerpiece is a breathtaking 18-armed Guanyin (Goddess of Mercy) statue standing over a serene, lotus-filled lake, surrounded by colorful Chinese-influenced pavilions. A giant Happy Buddha statue completes the vibrant lakeside complex.</p>
+        <div class="highlights-label">Highlights:</div>
+        <ul class="highlights-list">
+            <li>18-arm Guanyin statue — incredibly detailed, grand, and photogenic</li>
+            <li>Tranquil lotus pond filled with ornamental fish (food coins available on-site)</li>
+            <li>A striking Chinese-Thai architectural fusion unique to the island</li>
+            <li>Small on-site café inside the grounds selling traditional Thai snacks and drinks</li>
+            <li>Best visited in the early morning for soft light and fewer visitors</li>
+        </ul>
+        <div class="tip-box">
+            <strong>Local Tip:</strong> Modest dress code required. This is best combined with the Big Buddha temple as they are only 500 meters apart.
+        </div>
+    </div>
+
+    <div class="attraction-block">
+        <div class="attraction-header">
+            <div class="attraction-title">5. Na Muang Waterfalls</div>
+            <div class="attraction-meta">~9 km from hotel</div>
+            <div class="clear"></div>
+            <div class="attraction-tags">Nature • Jungle • Adventure</div>
+        </div>
+        <p>Hidden deep within the lush jungle interior of Samui, Na Muang is the island's most spectacular set of waterfalls. It features two distinct cascades: Na Muang 1 tumbles 20 metres into a large purple-tinged natural pool (great for swimming) and is easily accessible by vehicle. Na Muang 2 is much higher at 80 metres and requires a scenic 1.5 km uphill jungle hike.</p>
+        <div class="highlights-label">Highlights:</div>
+        <ul class="highlights-list">
+            <li>Na Muang 1: Effortless access, beautiful natural swimming pool, and shaded picnic area</li>
+            <li>Na Muang 2: Dramatic 80-metre cascade (the island's tallest) via a moderate jungle trek</li>
+            <li>Scenic hiking trails running through natural rubber plantations and dense tropical forest</li>
+            <li>Guided ATV jungle tours available for booking from the main park entrance</li>
+            <li>Fresh local coconuts and refreshing Thai snacks sold at roadside stalls at the base</li>
+        </ul>
+        <div class="tip-box">
+            <strong>Local Tip:</strong> Wear proper footwear with good grip for the Na Muang 2 hike, as the natural trail can become very slippery after rain.
+        </div>
+    </div>
+
+    <div class="attraction-block">
+        <div class="attraction-header">
+            <div class="attraction-title">6. Ang Thong Marine National Park</div>
+            <div class="attraction-meta">Day Trip by Boat</div>
+            <div class="clear"></div>
+            <div class="attraction-tags">Island Hopping • Snorkelling • Sea Kayaking</div>
+        </div>
+        <p>An pristine archipelago of 42 islands rising dramatically from the Gulf of Thailand, Ang Thong Marine National Park is widely considered one of Southeast Asia's most breathtaking natural sites. Towering limestone karsts, hidden lagoons, emerald sea caves, and vibrant coral reefs make this an unmissable day trip. The park famously inspired the setting for Alex Garland's novel 'The Beach'.</p>
+        <div class="highlights-label">Highlights:</div>
+        <ul class="highlights-list">
+            <li>Snorkelling in crystal-clear waters around the protected Koh Wao coral reef</li>
+            <li>Kayaking directly into the famous Emerald Lake (Thale Nai)—a stunning hidden sea lake</li>
+            <li>Challenging viewpoint hike on Koh Wua Talap for a panoramic view of all 42 islands</li>
+            <li>Exploring the vibrant saltwater lagoon on Koh Mae Ko with its striking turquoise hue</li>
+            <li>Abundant native wildlife: Monitor lizards, sea eagles, dusky langurs, and hornbills</li>
+        </ul>
+        <div class="tip-box">
+            <strong>Local Tip:</strong> Book via our concierge desk 1 day ahead. Trips depart around 08:30 and return by 17:00, with park fees typically included.
+        </div>
+    </div>
+
+    <div class="attraction-block">
+        <div class="attraction-header">
+            <div class="attraction-title">7. Fisherman's Village (Bophut)</div>
+            <div class="attraction-meta">~15 km from hotel</div>
+            <div class="clear"></div>
+            <div class="attraction-tags">Culture • Dining • Night Market</div>
+        </div>
+        <p>One of Koh Samui's most charming corners, Bophut Fisherman's Village is a beautifully preserved stretch of century-old Chinese shophouses lining a quiet beach. By day, it is a peaceful enclave of boutique beachside cafés, art galleries, and seafood restaurants. On Friday evenings, it transforms into Samui's most beloved walking street market.</p>
+        <div class="highlights-label">Highlights:</div>
+        <ul class="highlights-list">
+            <li>Friday Night Walking Street: Active 17:00 to 23:00 (ideal to arrive by 18:00)</li>
+            <li>Atmospheric, fresh seafood BBQ restaurants situated right on the sand</li>
+            <li>Charming independent boutiques selling premium Thai silk, handmade jewelry, and local art</li>
+            <li>Famous local venues like Gecko Bar and The Shack for great live music and cold drinks</li>
+            <li>Calm beach waters ideal for an atmospheric morning stroll or relaxing sunset drinks</li>
+        </ul>
+        <div class="tip-box">
+            <strong>Local Tip:</strong> The Friday market gets exceptionally busy after 19:00; go early to enjoy the widest selection of local street food and easy walking.
+        </div>
+    </div>
+
+    <div class="attraction-block">
+        <div class="attraction-header">
+            <div class="attraction-title">8. Tarnim Magic Garden</div>
+            <div class="attraction-meta">~11 km from hotel</div>
+            <div class="clear"></div>
+            <div class="attraction-tags">Hidden Gem • Art • Jungle Views</div>
+        </div>
+        <p>Perched high in the misty jungle hills of central Koh Samui, the Secret Buddha Garden is one of the island's most enchanting hidden attractions. Created by local fruit farmer Nim Thongsuk starting in 1976, the hidden garden is filled with dozens of hand-crafted statues of gods, mythical creatures, and Buddha figures, all nestled seamlessly among hidden waterfalls at 400 metres above sea level.</p>
+        <div class="highlights-label">Highlights:</div>
+        <ul class="highlights-list">
+            <li>Over 30 unique, hand-crafted historical sculptures in a pristine jungle clearing</li>
+            <li>A gentle natural waterfall and stream running directly through the garden grounds</li>
+            <li>Panoramic views over Koh Samui's interior jungle canopy and distant coastline</li>
+            <li>Extremely peaceful atmosphere, often with very few visitors at any given time</li>
+            <li>The steep jungle road leading up the mountain is a memorable island adventure in itself</li>
+        </ul>
+        <div class="tip-box">
+            <strong>Local Tip:</strong> Only accessible via a 4WD vehicle or jeep tour—standard rental cars and automatic motorbikes cannot safely manage the steep, rugged mountain road. Please ask our concierge to arrange a private transport for you.
+        </div>
+    </div>
+
+    <div class="attraction-block">
+        <div class="attraction-header">
+            <div class="attraction-title">9. Maenam Beach</div>
+            <div class="attraction-meta">~19 km from hotel</div>
+            <div class="clear"></div>
+            <div class="attraction-tags">Beach • Local Life • Quiet Escape</div>
+        </div>
+        <p>Maenam is one of Koh Samui's most underrated beaches—a long, incredibly peaceful stretch of golden sand on the north coast, heavily backed by mature casuarina trees providing ample natural shade. Far less crowded than Chaweng, it is preferred by travellers seeking absolute tranquility. The shallow, calm water makes it particularly safe and suitable for families.</p>
+        <div class="highlights-label">Highlights:</div>
+        <ul class="highlights-list">
+            <li>Wide, uncrowded beach with lovely natural casuarina tree shade</li>
+            <li>Calmer, shallow water conditions — excellent for children and casual swimmers alike</li>
+            <li>Authentic local Thai seafood restaurants offering excellent quality at affordable prices</li>
+            <li>Spectacular sunset views looking north across the gulf toward neighboring islands</li>
+            <li>The local Sunday Walking Street market in Maenam village (17:00 – 22:00)</li>
+        </ul>
+        <div class="tip-box">
+            <strong>Local Tip:</strong> This is widely considered the best beach on the island for a peaceful, meditative sunrise walk before heading to breakfast.
+        </div>
+    </div>
+
+    <div class="attraction-block">
+        <div class="attraction-header">
+            <div class="attraction-title">10. Koh Tao & Koh Nang Yuan</div>
+            <div class="attraction-meta">Ferry Trip</div>
+            <div class="clear"></div>
+            <div class="attraction-tags">Diving • Snorkelling • Island Hopping</div>
+        </div>
+        <p>Koh Tao is celebrated as Southeast Asia's premier diving destination, sitting north of Samui. The island is surrounded by some of the Gulf of Thailand's clearest waters and most biodiverse coral reefs, teeming with marine life. Adjacent Koh Nang Yuan—three tiny islets connected by an iconic, pristine white sandbar—is one of Thailand's most legendary locations.</p>
+        <div class="highlights-label">Highlights:</div>
+        <ul class="highlights-list">
+            <li>World-class scuba diving: Frequent sightings of whale sharks, sea turtles, and giant barracudas</li>
+            <li>Highly budget-friendly PADI Open Water certification courses (starting from ~฿9,000)</li>
+            <li>Koh Nang Yuan: Iconic twin sandbar connecting three islets, offering an incredible viewpoint hike</li>
+            <li>Freedom Beach and Sairee Beach for relaxed, world-class shallow reef snorkelling</li>
+            <li>High-speed catamarans depart daily from Na Thon Pier (~2 hours) or Maenam Pier (~1.5 hours)</li>
+        </ul>
+        <div class="tip-box">
+            <strong>Local Tip:</strong> Please bring reef-safe sunscreen to protect the marine ecosystem.
+        </div>
+    </div>
+
+    <h2>Practical Tips & Island Know-How</h2>
+    
+    <h3>Getting Around</h3>
+    <ul>
+        <li><strong>Songthaews (Red Pickup Trucks):</strong> The cheapest local transit option. Simply flag one down along the main road and agree on the destination price before stepping in.</li>
+        <li><strong>Ride-Hailing Apps:</strong> The Grab and Bolt apps work excellently across Samui and provide upfront pricing, making them highly secure for travelers.</li>
+        <li><strong>Scooter Rentals:</strong> Rentals can be arranged at the reception. Please always wear a helmet and take photos of the vehicle’s condition before renting.</li>
+    </ul>
+
+    <h3>Money & Payments</h3>
+    <ul>
+        <li>Thai Baht (THB) is the official currency. ATMs are widely available across Lamai and Chaweng.</li>
+        <li>Most upscale hotels, malls, and larger restaurants accept major credit cards (Visa/Mastercard). Local markets and street stalls are strictly cash-only.</li>
+    </ul>
+
+    <h3>Temple Etiquette</h3>
+    <ul>
+        <li>Always cover your shoulders and knees when visiting Buddhist temples.</li>
+        <li>Remove your footwear before entering indoor temple buildings. Never touch sacred Buddha images or monks. Complimentary sarongs are typically available to borrow at entries.</li>
+    </ul>
+
+    <h3>Health & Safety</h3>
+    <ul>
+        <li>The tropical UV index regularly exceeds 12. Please wear SPF 50+ sunscreen and reapply frequently.</li>
+        <li>Drink bottled water only. When renting jet skis, always inspect and photograph any pre-existing scratches alongside the operator before taking off.</li>
+    </ul>
+
+    <h3>Useful Smartphone Apps</h3>
+    <p class="app-list">Grab / Bolt <span style="color:#8c7662; font-weight:normal;">(Taxis & Food Delivery)</span> • Google Maps <span style="color:#8c7662; font-weight:normal;">(Navigation)</span> • XE Currency <span style="color:#8c7662; font-weight:normal;">(Rates)</span> • Klook <span style="color:#8c7662; font-weight:normal;">(Tours)</span></p>
+
+    <div class="footer-info">
+        <p><strong>AMMATARA PURA POOL VILLA KOH SAMUI</strong><br>
+        Lamai Beach, Koh Samui, Surat Thani, Thailand<br>
+        info@ammatarapura.com • www.ammatarapura.com • +66 (0)616649545</p>
+        <p style="font-style: italic; margin-top: 15px; color: #5c1d1d;">We wish you an unforgettable luxury stay on Koh Samui. Kop khun kha / Kop khun krub!</p>
+    </div>
+
+</body>
+</html>

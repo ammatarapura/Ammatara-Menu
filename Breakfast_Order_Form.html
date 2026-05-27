@@ -316,32 +316,9 @@
   .bowl-letters:focus { border-color: var(--gold); }
 
   /* ===================== COUNTER BADGE ===================== */
-  .count-badge {
-    display: inline-flex; align-items: center; justify-content: center;
-    min-width: 20px; height: 20px; border-radius: 10px;
-    background: var(--red); color: white;
-    font-size: 11px; font-weight: 500; padding: 0 5px;
-    margin-left: 6px;
-    transition: all 0.2s;
-  }
   .count-badge.zero { background: var(--border); color: var(--text-muted); }
 
-  /* ===================== PROGRESS ===================== */
-  .progress-bar-wrap {
-    margin: 0.75rem 1rem 0;
-    background: var(--cream-dark);
-    border-radius: 4px; height: 4px; overflow: hidden;
-  }
-  .progress-bar {
-    height: 100%; background: var(--red);
-    border-radius: 4px;
-    transition: width 0.3s ease;
-  }
-  .progress-label {
-    display: flex; justify-content: space-between;
-    font-size: 11px; color: var(--text-muted);
-    padding: 4px 1rem 0;
-  }
+  
 
   /* ===================== SUBMIT ===================== */
   .submit-wrap {
@@ -437,7 +414,7 @@
   <h2>Order Received</h2>
   <div class="success-room" id="successRoom"></div>
   <p>Your breakfast selection has been sent to the kitchen. Enjoy your morning!</p>
-  <button class="btn-new-order" onclick="resetForm()">Place another order</button>
+  <button class="btn-new-order" onclick="newOrder()">Place another order</button>
 </div>
 
 <!-- ==================== TOAST ==================== -->
@@ -445,8 +422,8 @@
 
 <!-- ==================== HERO ==================== -->
 <div class="hero">
+  <div class="hero-sub">Ammatara Pura Pool Villas</div>
   <div class="hero-inner">
-    <div class="hero-sub">Good Morning</div>
     <h1>Breakfast<br><em>Menu</em></h1>
     <div class="hero-rule"></div>
     <div class="hero-time">Served daily · 6:30 am – 10:30 am</div>
@@ -459,11 +436,11 @@
   <div class="guest-grid">
     <div class="field-group">
       <label>Room / Villa *</label>
-      <input type="text" id="guestRoom" placeholder="e.g. Villa 12" required>
+      <input type="text" id="guestRoom" placeholder="e.g. Villa 101" required>
     </div>
     <div class="field-group">
       <label>Guest Name *</label>
-      <input type="text" id="guestName" placeholder="Full name" required>
+      <input type="text" id="guestName" placeholder="Enter Your Name" required>
     </div>
     <div class="field-group">
       <label>Breakfast Date *</label>
@@ -604,9 +581,6 @@
 </div>
 <div class="page-limit">★ Please select up to 5 items from this section ★</div>
 
-<div id="foodCounter" class="progress-label"><span>Food items selected</span><span id="foodCountNum">0 / 5</span></div>
-<div class="progress-bar-wrap"><div class="progress-bar" id="foodProgress" style="width:0%"></div></div>
-<div style="height:0.75rem"></div>
 
 <!-- CEREALS -->
 <div class="section-card">
@@ -841,178 +815,61 @@
 
 <script>
   // ===================== CONFIG =====================
-  // PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL BELOW:
-  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzwWo4u2-dHOBHi2oQxlKRWIJ3ak-ne-vmfV1GykwBMg6tBGq8l-1xxLh_BRlk-vlOw/exec';
+  // Collector script URL (Part 1 — raw data sheet)
+  const GOOGLE_SCRIPT_URL   = 'https://script.google.com/macros/s/AKfycbzwWo4u2-dHOBHi2oQxlKRWIJ3ak-ne-vmfV1GykwBMg6tBGq8l-1xxLh_BRlk-vlOw/exec';
+  // Reporter / second endpoint — paste your URL here if needed, or set to same as above
+  const GOOGLE_SCRIPT_URL_2 = GOOGLE_SCRIPT_URL;
 
   // ===================== CHECKBOX ACTIVATION =====================
-  document.querySelectorAll('.cb-pill, .item-row, .filling-pill').forEach(el => {
-    el.addEventListener('change', function() {
-      const cb = this.querySelector('input[type=checkbox]');
-      if (cb) {
-        this.classList.toggle('active', cb.checked);
-        updateFoodCounter();
-        handleConditional(cb);
-      }
-    });
+  // Listen on the *document* so dynamically-added items also work.
+  // We attach to 'change' on the hidden <input> itself (bubbles fine),
+  // then style the closest label wrapper.
+  document.addEventListener('change', function(e) {
+    const cb = e.target;
+    if (cb.type !== 'checkbox') return;
+
+    const wrapper = cb.closest('.cb-pill, .item-row, .filling-pill');
+    if (wrapper) {
+      wrapper.classList.toggle('active', cb.checked);
+    }
+
+    handleConditional(cb);
   });
 
   // ===================== CONDITIONAL REVEALS =====================
   function handleConditional(cb) {
     if (cb.value === 'Boiled Eggs') {
       document.getElementById('boiledMinutesWrap').style.display = cb.checked ? 'block' : 'none';
+      if (!cb.checked) {
+        document.getElementById('boiledMinutes').value = '';
+      }
     }
-  }
-
-  // ===================== FOOD COUNTER =====================
-  const foodSectionIds = ['cereals','yoghurts','fruits','cheeses','bread','eggs','omlRegular','omlThai','asian','seafoodColdCuts','waffles','pancakes','smoothieBowls'];
-
-  function updateFoodCounter() {
-    let count = 0;
-    foodSectionIds.forEach(id => {
-      const el = document.getElementById(id);
-      if (el) count += el.querySelectorAll('input[type=checkbox]:checked').length;
-    });
-    const num = document.getElementById('foodCountNum');
-    const bar = document.getElementById('foodProgress');
-    if (num) num.textContent = count + ' / 5';
-    if (bar) bar.style.width = Math.min(count / 5 * 100, 100) + '%';
-    return count;
   }
 
   // ===================== DATA HELPERS =====================
   function getChecked(id) {
     const el = document.getElementById(id);
     if (!el) return '';
-    return Array.from(el.querySelectorAll('input[type=checkbox]:checked')).map(c=>c.value).join(', ');
+    return Array.from(el.querySelectorAll('input[type=checkbox]:checked'))
+      .map(c => c.value).join(', ');
   }
 
-// ===================== SUBMIT =====================
-  async function submitOrder() {
-    const room = document.getElementById('guestRoom').value.trim();
-    const name = document.getElementById('guestName').value.trim();
-    const breakfastDate = document.getElementById('breakfastDate').value;
-    const prefTime = document.getElementById('prefTime').value;
-
-    // 1. Enforce Mandatory "Your Details" Fields
-    if (!room) { 
-      showToast('⚠️ Please enter your Room / Villa number'); 
-      document.getElementById('guestRoom').focus();
-      return; 
-    }
-    if (!name) { 
-      showToast('⚠️ Please enter your Guest Name'); 
-      document.getElementById('guestName').focus();
-      return; 
-    }
-    if (!breakfastDate) { 
-      showToast('⚠️ Please select a Breakfast Date'); 
-      document.getElementById('breakfastDate').focus();
-      return; 
-    }
-
-    // 2. Enforce Time Window Restrictions (06:30 AM - 10:00 AM)
-    if (!prefTime) {
-      showToast('⚠️ Please select a Preferred Time');
-      return;
-    }
-    
-    // Convert time format "HH:MM" to minutes for comparison
-    const [hours, minutes] = prefTime.split(':').map(Number);
-    const totalMinutes = (hours * 60) + minutes;
-    const minMinutes = (6 * 60) + 30; // 06:30 -> 390 mins
-    const maxMinutes = 10 * 60;       // 10:00 -> 600 mins
-
-    if (totalMinutes < minMinutes || totalMinutes > maxMinutes) {
-      showToast('🕒 Breakfast is only served between 06:30 AM and 10:00 AM');
-      document.getElementById('prefTime').focus();
-      return;
-    }
-
-    // --- Proceed with Order Submission ---
-    const btn = document.getElementById('submitBtn');
-    const btnText = document.getElementById('btnText');
-    btn.disabled = true;
-    btnText.innerHTML = '';
-    const spinner = document.createElement('div');
-    spinner.className = 'spinner';
-    btn.appendChild(spinner);
-
-    const boiledMin = document.getElementById('boiledMinutes').value.trim();
-    const asianProtein = getChecked('asianProtein');
-    const omlRegFill = getChecked('omlRegFillings');
-    const omlThaiFill = getChecked('omlThaiFillings');
-    const sides = getChecked('sideOrders');
-    const cerealMilk = getChecked('cerealMilk');
-    const spreads = getChecked('spreads');
-    const bowlLetters = document.getElementById('bowlLetters').value.trim().toUpperCase();
-    const specialReq = document.getElementById('specialRequests').value.trim();
-
-    const payload = {
-      timestamp: new Date().toISOString(),
-      breakfast_date: breakfastDate,
-      room,
-      name,
-      guests: document.getElementById('guestCount').value,
-      preferred_time: prefTime,
-      juices: getChecked('juices'),
-      shakes: getChecked('shakes'),
-      mixed_juices: getChecked('mixedJuices'),
-      smoothies: getChecked('smoothies'),
-      coffee: getChecked('coffee'),
-      tea: getChecked('tea'),
-      milk: getChecked('milk'),
-      cereals: getChecked('cereals'),
-      cereal_milk: cerealMilk,
-      yoghurts: getChecked('yoghurts'),
-      fruits: getChecked('fruits'),
-      cheeses: getChecked('cheeses'),
-      bread: getChecked('bread'),
-      spreads,
-      eggs: getChecked('eggs'),
-      boiled_minutes: boiledMin,
-      omelette_regular: getChecked('omlRegular'),
-      omelette_regular_fillings: omlRegFill,
-      omelette_thai: getChecked('omlThai'),
-      omelette_thai_fillings: omlThaiFill,
-      side_orders: sides,
-      asian: getChecked('asian'),
-      asian_protein: asianProtein,
-      seafood_coldcuts: getChecked('seafoodColdCuts'),
-      waffles: getChecked('waffles'),
-      pancakes: getChecked('pancakes'),
-      smoothie_bowls: getChecked('smoothieBowls'),
-      bowl_letters: bowlLetters,
-      special_requests: specialReq
-    };
-
-    try {
-      if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
-        await new Promise(r => setTimeout(r, 1200));
-        showSuccess(room && name ? `${room} — ${name}` : (room || name));;
-      } else {
-        const resp = await fetch(GOOGLE_SCRIPT_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        showSuccess(room && name ? `${room} — ${name}` : (room || name));;
-      }
-    } catch(e) {
-      showToast('❌ Connection error — please try again');
-      btn.disabled = false;
-      btnText.textContent = 'Send Order to Kitchen';
-      spinner.remove();
-    }
+  // ===================== TOAST =====================
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
   }
 
+  // ===================== SUCCESS SCREEN =====================
   function showSuccess(identifier) {
-    const screen = document.getElementById('successScreen');
     document.getElementById('successRoom').textContent = identifier;
-    screen.classList.add('show');
-    window.scrollTo(0,0);
+    document.getElementById('successScreen').classList.add('show');
+    window.scrollTo(0, 0);
   }
 
+  // ===================== RESET FORM =====================
   function resetForm() {
     document.querySelectorAll('input[type=checkbox]').forEach(c => {
       c.checked = false;
@@ -1021,25 +878,137 @@
     });
     document.querySelectorAll('input[type=text], input[type=time], input[type=date], textarea').forEach(el => {
       if (el.type === 'time') el.value = '07:00';
-      else if (el.type === 'date') el.valueAsDate = new Date();  // ← restore today
+      else if (el.type === 'date') el.valueAsDate = new Date();
       else el.value = '';
     });
     document.getElementById('guestCount').value = '1';
     document.getElementById('boiledMinutesWrap').style.display = 'none';
-    updateFoodCounter();
 
     const btn = document.getElementById('submitBtn');
     btn.disabled = false;
     document.getElementById('btnText').textContent = 'Send Order to Kitchen';
-    btn.querySelectorAll('.spinner').forEach(s=>s.remove());
-
-    document.getElementById('successScreen').classList.remove('show');
+    btn.querySelectorAll('.spinner').forEach(s => s.remove());
   }
 
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3000);
+  // Called only by the "Place another order" button
+  function newOrder() {
+    document.getElementById('successScreen').classList.remove('show');
+    resetForm();
+  }
+
+  // ===================== SUBMIT =====================
+  async function submitOrder() {
+    const room          = document.getElementById('guestRoom').value.trim();
+    const name          = document.getElementById('guestName').value.trim();
+    const breakfastDate = document.getElementById('breakfastDate').value;
+    const prefTime      = document.getElementById('prefTime').value;
+
+    // 1. Mandatory fields
+    if (!room) {
+      showToast('⚠️ Please enter your Room / Villa number');
+      document.getElementById('guestRoom').focus();
+      return;
+    }
+    if (!name) {
+      showToast('⚠️ Please enter your Guest Name');
+      document.getElementById('guestName').focus();
+      return;
+    }
+    if (!breakfastDate) {
+      showToast('⚠️ Please select a Breakfast Date');
+      document.getElementById('breakfastDate').focus();
+      return;
+    }
+
+    // 2. Time window 06:30 – 10:00
+    if (!prefTime) {
+      showToast('⚠️ Please select a Preferred Time');
+      return;
+    }
+    const [hours, mins] = prefTime.split(':').map(Number);
+    const totalMins = hours * 60 + mins;
+    if (totalMins < 390 || totalMins > 600) {
+      showToast('🕒 Breakfast is only served between 06:30 AM and 10:00 AM');
+      document.getElementById('prefTime').focus();
+      return;
+    }
+
+    // 3. Show spinner
+    const btn     = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    btn.disabled  = true;
+    btnText.innerHTML = '';
+    const spinner = document.createElement('div');
+    spinner.className = 'spinner';
+    btn.appendChild(spinner);
+
+    // 4. Build payload
+    const payload = {
+      timestamp:                new Date().toISOString(),
+      breakfast_date:           breakfastDate,
+      room,
+      name,
+      guests:                   document.getElementById('guestCount').value,
+      preferred_time:           prefTime,
+      juices:                   getChecked('juices'),
+      shakes:                   getChecked('shakes'),
+      mixed_juices:             getChecked('mixedJuices'),
+      smoothies:                getChecked('smoothies'),
+      coffee:                   getChecked('coffee'),
+      tea:                      getChecked('tea'),
+      milk:                     getChecked('milk'),
+      cereals:                  getChecked('cereals'),
+      cereal_milk:              getChecked('cerealMilk'),
+      yoghurts:                 getChecked('yoghurts'),
+      fruits:                   getChecked('fruits'),
+      cheeses:                  getChecked('cheeses'),
+      bread:                    getChecked('bread'),
+      spreads:                  getChecked('spreads'),
+      eggs:                     getChecked('eggs'),
+      boiled_minutes:           document.getElementById('boiledMinutes').value.trim(),
+      omelette_regular:         getChecked('omlRegular'),
+      omelette_regular_fillings:getChecked('omlRegFillings'),
+      omelette_thai:            getChecked('omlThai'),
+      omelette_thai_fillings:   getChecked('omlThaiFillings'),
+      side_orders:              getChecked('sideOrders'),
+      asian:                    getChecked('asian'),
+      asian_protein:            getChecked('asianProtein'),
+      seafood_coldcuts:         getChecked('seafoodColdCuts'),
+      waffles:                  getChecked('waffles'),
+      pancakes:                 getChecked('pancakes'),
+      smoothie_bowls:           getChecked('smoothieBowls'),
+      bowl_letters:             document.getElementById('bowlLetters').value.trim().toUpperCase(),
+      special_requests:         document.getElementById('specialRequests').value.trim()
+    };
+
+    // 5. Submit
+    try {
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method:  'POST',
+        mode:    'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(payload)
+      });
+
+      if (GOOGLE_SCRIPT_URL_2 && GOOGLE_SCRIPT_URL_2 !== GOOGLE_SCRIPT_URL) {
+        await fetch(GOOGLE_SCRIPT_URL_2, {
+          method:  'POST',
+          mode:    'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify(payload)
+        });
+      }
+
+      showSuccess(payload.room);
+
+    } catch (err) {
+      console.error(err);
+      showToast('❌ Submission failed. Please try again.');
+    } finally {
+      btn.disabled = false;
+      btnText.textContent = 'Send Order to Kitchen';
+      btn.querySelectorAll('.spinner').forEach(s => s.remove());
+    }
   }
 </script>
 </body>

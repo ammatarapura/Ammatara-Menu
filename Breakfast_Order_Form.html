@@ -458,19 +458,19 @@
   <h2>Your Details</h2>
   <div class="guest-grid">
     <div class="field-group">
-      <label>Room / Villa</label>
-      <input type="text" id="guestRoom" placeholder="e.g. Villa 101" required>
+      <label>Room / Villa *</label>
+      <input type="text" id="guestRoom" placeholder="e.g. Villa 12" required>
     </div>
     <div class="field-group">
-      <label>Guest Name</label>
-      <input type="text" id="guestName" placeholder="Full name">
+      <label>Guest Name *</label>
+      <input type="text" id="guestName" placeholder="Full name" required>
     </div>
     <div class="field-group">
-      <label>Breakfast Date</label>
-      <input type="date" id="breakfastDate">
+      <label>Breakfast Date *</label>
+      <input type="date" id="breakfastDate" required>
     </div>
     <div class="field-group">
-      <label>Preferred Time</label>
+      <label>Preferred Time (06:30 - 10:00)</label>
       <input type="time" id="prefTime" value="07:00" min="06:30" max="10:00">
     </div>
     <div class="field-group">
@@ -489,7 +489,7 @@
   <div class="page-label-text">Page 1 — Beverages</div>
   <div class="page-label-line"></div>
 </div>
-<div class="page-limit">★ Please select 2 items for each person from this section ★</div>
+<div class="page-limit">★ Please select 2 items from this section ★</div>
 
 <!-- FRESHLY SQUEEZED JUICES -->
 <div class="section-card">
@@ -602,7 +602,7 @@
   <div class="page-label-text">Page 2 & 3 — Food</div>
   <div class="page-label-line"></div>
 </div>
-<div class="page-limit">★ Please select up to 5 items for each person from this section ★</div>
+<div class="page-limit">★ Please select up to 5 items from this section ★</div>
 
 <div id="foodCounter" class="progress-label"><span>Food items selected</span><span id="foodCountNum">0 / 5</span></div>
 <div class="progress-bar-wrap"><div class="progress-bar" id="foodProgress" style="width:0%"></div></div>
@@ -756,9 +756,9 @@
       <label class="item-row"><input type="checkbox" value="Yellow Noodle Soup"><div class="item-check"></div><div class="item-text"><div class="item-name">Yellow Noodle Soup</div></div></label>
       <label class="item-row"><input type="checkbox" value="Flat Noodle Soup"><div class="item-check"></div><div class="item-text"><div class="item-name">Flat Noodle Soup</div></div></label>
     </div>
-    <div id="flatNoodleWrap" style="display:none; padding-top:6px">
-      <div class="sub-label">Flat Noodle — Protein</div>
-      <div class="filling-grid" id="flatNoodleProtein">
+    <div id="asianProteinWrap" style="padding-top:6px">
+      <div class="sub-label">Protein</div>
+      <div class="filling-grid" id="asianProtein">
         <label class="filling-pill"><input type="checkbox" value="Chicken"><div class="fp-check"></div>Chicken</label>
         <label class="filling-pill"><input type="checkbox" value="Pork"><div class="fp-check"></div>Pork</label>
         <label class="filling-pill"><input type="checkbox" value="Prawns"><div class="fp-check"></div>Prawns</label>
@@ -837,17 +837,12 @@
     <span id="btnText">Send Order to Kitchen</span>
   </button>
   <div class="submit-note">Your order will be confirmed by our team</div>
-  <button onclick="testConnection()" style="margin-top:4px;background:none;border:1px solid var(--border);border-radius:8px;padding:7px 18px;font-size:12px;color:var(--text-muted);font-family:'DM Sans',sans-serif;cursor:pointer;width:100%;max-width:400px;">
-    🔌 Test connection to Google Sheets
-  </button>
 </div>
 
 <script>
   // ===================== CONFIG =====================
   // PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL BELOW:
   const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzwWo4u2-dHOBHi2oQxlKRWIJ3ak-ne-vmfV1GykwBMg6tBGq8l-1xxLh_BRlk-vlOw/exec';
-
-
 
   // ===================== CHECKBOX ACTIVATION =====================
   document.querySelectorAll('.cb-pill, .item-row, .filling-pill').forEach(el => {
@@ -865,9 +860,6 @@
   function handleConditional(cb) {
     if (cb.value === 'Boiled Eggs') {
       document.getElementById('boiledMinutesWrap').style.display = cb.checked ? 'block' : 'none';
-    }
-    if (cb.value === 'Flat Noodle Soup') {
-      document.getElementById('flatNoodleWrap').style.display = cb.checked ? 'block' : 'none';
     }
   }
 
@@ -894,16 +886,49 @@
     return Array.from(el.querySelectorAll('input[type=checkbox]:checked')).map(c=>c.value).join(', ');
   }
 
-  // ===================== SUBMIT =====================
+// ===================== SUBMIT =====================
   async function submitOrder() {
     const room = document.getElementById('guestRoom').value.trim();
-    const time = document.getElementById('prefTime').value;
-    if (time < '06:30' || time > '10:00') 
-    {showToast('Please select a time between 6:30 and 10:00 AM');
-    return;}
     const name = document.getElementById('guestName').value.trim();
-    if (!room) { showToast('Please enter your room or villa number'); return; }
+    const breakfastDate = document.getElementById('breakfastDate').value;
+    const prefTime = document.getElementById('prefTime').value;
 
+    // 1. Enforce Mandatory "Your Details" Fields
+    if (!room) { 
+      showToast('⚠️ Please enter your Room / Villa number'); 
+      document.getElementById('guestRoom').focus();
+      return; 
+    }
+    if (!name) { 
+      showToast('⚠️ Please enter your Guest Name'); 
+      document.getElementById('guestName').focus();
+      return; 
+    }
+    if (!breakfastDate) { 
+      showToast('⚠️ Please select a Breakfast Date'); 
+      document.getElementById('breakfastDate').focus();
+      return; 
+    }
+
+    // 2. Enforce Time Window Restrictions (06:30 AM - 10:00 AM)
+    if (!prefTime) {
+      showToast('⚠️ Please select a Preferred Time');
+      return;
+    }
+    
+    // Convert time format "HH:MM" to minutes for comparison
+    const [hours, minutes] = prefTime.split(':').map(Number);
+    const totalMinutes = (hours * 60) + minutes;
+    const minMinutes = (6 * 60) + 30; // 06:30 -> 390 mins
+    const maxMinutes = 10 * 60;       // 10:00 -> 600 mins
+
+    if (totalMinutes < minMinutes || totalMinutes > maxMinutes) {
+      showToast('🕒 Breakfast is only served between 06:30 AM and 10:00 AM');
+      document.getElementById('prefTime').focus();
+      return;
+    }
+
+    // --- Proceed with Order Submission ---
     const btn = document.getElementById('submitBtn');
     const btnText = document.getElementById('btnText');
     btn.disabled = true;
@@ -913,7 +938,7 @@
     btn.appendChild(spinner);
 
     const boiledMin = document.getElementById('boiledMinutes').value.trim();
-    const flatProtein = getChecked('flatNoodleProtein');
+    const asianProtein = getChecked('asianProtein');
     const omlRegFill = getChecked('omlRegFillings');
     const omlThaiFill = getChecked('omlThaiFillings');
     const sides = getChecked('sideOrders');
@@ -923,12 +948,12 @@
     const specialReq = document.getElementById('specialRequests').value.trim();
 
     const payload = {
-      timestamp: new Date().toLocaleString('en-GB'),
+      timestamp: new Date().toISOString(),
+      breakfast_date: breakfastDate,
       room,
       name,
       guests: document.getElementById('guestCount').value,
-      breakfast_date: document.getElementById('breakfastDate').value,
-      preferred_time: document.getElementById('prefTime').value,
+      preferred_time: prefTime,
       juices: getChecked('juices'),
       shakes: getChecked('shakes'),
       mixed_juices: getChecked('mixedJuices'),
@@ -951,7 +976,7 @@
       omelette_thai_fillings: omlThaiFill,
       side_orders: sides,
       asian: getChecked('asian'),
-      flat_noodle_protein: flatProtein,
+      asian_protein: asianProtein,
       seafood_coldcuts: getChecked('seafoodColdCuts'),
       waffles: getChecked('waffles'),
       pancakes: getChecked('pancakes'),
@@ -961,49 +986,23 @@
     };
 
     try {
-      // ── DEMO MODE (no URL set yet) ──────────────────────────
       if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
         await new Promise(r => setTimeout(r, 1200));
-        showSuccess(room || name);
-        return;
+        showSuccess(room && name ? `${room} — ${name}` : (room || name));;
+      } else {
+        const resp = await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        showSuccess(room && name ? `${room} — ${name}` : (room || name));;
       }
-
-      // ── BASIC URL SANITY CHECK ──────────────────────────────
-      if (!GOOGLE_SCRIPT_URL.startsWith('https://script.google.com/macros/')) {
-        throw new Error('BAD_URL');
-      }
-
-      // ── SEND ORDER ──────────────────────────────────────────
-      // We use no-cors because Google Apps Script does not send
-      // CORS headers. This means we cannot read the response,
-      // but the request DOES reach Google and the order IS saved.
-      // A network error (wrong URL, no internet) throws an exception
-      // which we catch below.
-      await fetch(GOOGLE_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      // If fetch didn't throw, the request reached Google — success.
-      showSuccess(room || name);
-
-    } catch(err) {
+    } catch(e) {
+      showToast('❌ Connection error — please try again');
       btn.disabled = false;
       btnText.textContent = 'Send Order to Kitchen';
       spinner.remove();
-
-      // Give a specific message depending on what went wrong
-      if (err.message === 'BAD_URL') {
-        showToast('❌ URL looks wrong — check it starts with https://script.google.com/macros/');
-      } else if (!navigator.onLine) {
-        showToast('❌ No internet connection — please check WiFi and try again');
-      } else {
-        // Most likely cause: URL is wrong or deployment settings are incorrect
-        showToast('❌ Could not reach Google — check your URL is correct and redeployed');
-        console.error('Submit error:', err);
-      }
     }
   }
 
@@ -1020,13 +1019,13 @@
       const parent = c.closest('.cb-pill, .item-row, .filling-pill');
       if (parent) parent.classList.remove('active');
     });
-    document.querySelectorAll('input[type=text], input[type=time], textarea').forEach(el => {
-      if (el.type === 'time') el.value = '08:00';
+    document.querySelectorAll('input[type=text], input[type=time], input[type=date], textarea').forEach(el => {
+      if (el.type === 'time') el.value = '07:00';
+      else if (el.type === 'date') el.valueAsDate = new Date();  // ← restore today
       else el.value = '';
     });
     document.getElementById('guestCount').value = '1';
     document.getElementById('boiledMinutesWrap').style.display = 'none';
-    document.getElementById('flatNoodleWrap').style.display = 'none';
     updateFoodCounter();
 
     const btn = document.getElementById('submitBtn');
@@ -1040,32 +1039,7 @@
   function showToast(msg) {
     const t = document.getElementById('toast');
     t.textContent = msg; t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 4000);
-  }
-
-  // ===================== CONNECTION TEST =====================
-  async function testConnection() {
-    if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
-      showToast('⚠️ No URL set yet — paste your Google Apps Script URL into the HTML file first');
-      return;
-    }
-    showToast('🔄 Testing connection...');
-    try {
-      // A GET request to the script URL returns a readable response (unlike POST no-cors)
-      const resp = await fetch(GOOGLE_SCRIPT_URL, { method: 'GET', mode: 'cors' });
-      const text = await resp.text();
-      if (text.includes('running')) {
-        showToast('✅ Connected! Google Sheets is ready to receive orders.');
-      } else {
-        showToast('⚠️ Got a response but it looks unexpected. Check your deployment.');
-      }
-    } catch(err) {
-      if (!navigator.onLine) {
-        showToast('❌ No internet connection detected');
-      } else {
-        showToast('❌ Cannot reach Google — URL may be wrong or deployment needs "Anyone" access');
-      }
-    }
+    setTimeout(() => t.classList.remove('show'), 3000);
   }
 </script>
 </body>

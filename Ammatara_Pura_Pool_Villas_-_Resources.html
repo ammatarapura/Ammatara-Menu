@@ -180,7 +180,7 @@
         <div class="button-group">
             <a href="https://drive.google.com/drive/folders/1HhjDtw35k8qjHE0DRzyZz7z--MfFM2aB?usp=sharing" class="menu-btn btn-main">Gallery</a>
             <a href="https://drive.google.com/file/d/1gtLUem7g7PIIEXap67T4nefV08o9UIYW/view" class="menu-btn btn-special">Fact Book</a>
-            <a href="https://ammatarapura.github.io/Ammatara-Menu/AGENT%20RATE%202026.pdf" class="menu-btn btn-contract">Contract Rate</a>
+            <a href="#" onclick="checkPassword(); return false;" class="menu-btn btn-contract">Contract Rate</a>
         </div>
     </div>
 
@@ -191,5 +191,16 @@
         </div>
     </div>
 
+<script>
+  function checkPassword() {
+    var input = prompt("Enter password to access Contract Rate:");
+    if (input === "Ammatara2026") {
+      window.location.href = "https://ammatarapura.github.io/Ammatara-Menu/AGENT%20RATE%202026.pdf";
+    } else if (input !== null) {
+      alert("Incorrect password. Please try again.");
+    }
+  }
+</script>
+    
 </body>
 </html>

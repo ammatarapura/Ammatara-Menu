@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Room Inspection Checklist — Ammatara Pura</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --cream:#FAF6F0; --cream-dark:#F0E8DC; --gold:#B8860B; --red:#8B2020; --red-deep:#6E1A1A; --text:#2C1810; --muted:#6B5B4E; --border:#D4C4B0; --green:#2E7D32; --amber:#B26A00; }
+  *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--cream); font-family:'DM Sans','Noto Sans Thai',sans-serif; color:var(--text); padding-bottom:5rem; }
+  .header { background:var(--red); padding:1.6rem 1.2rem 1.2rem; color:#fff; }
+  .header small { font-size:10px; letter-spacing:.25em; text-transform:uppercase; opacity:.6; }
+  .header h1 { font-family:'Playfair Display',serif; font-weight:400; font-size:26px; margin:4px 0; }
+  .header p { font-size:12px; opacity:.75; }
+  .wrap { max-width:820px; margin:0 auto; padding:1rem; }
+  .sec { background:#fff; border:1px solid var(--border); border-radius:12px; margin-bottom:1rem; overflow:hidden; }
+  .sec-head { background:var(--red); color:#fff; padding:.7rem 1rem; display:flex; justify-content:space-between; align-items:center; gap:8px; }
+  .sec-head b { font-family:'Playfair Display',serif; font-size:15px; font-weight:600; }
+  .sec-head small { display:block; font-size:11px; opacity:.75; font-weight:400; font-family:'DM Sans',sans-serif; }
+  .sec-head button { background:rgba(255,255,255,.15); color:#fff; border:1px solid rgba(255,255,255,.4); border-radius:14px; padding:4px 10px; font-size:11px; cursor:pointer; white-space:nowrap; }
+  .sec-body { padding:.8rem 1rem; }
+  .field { margin-bottom:.8rem; }
+  .field label { display:block; font-size:12px; font-weight:600; color:var(--muted); margin-bottom:3px; }
+  input[type=text], input[type=date], input[type=datetime-local], select, textarea { width:100%; border:1.5px solid var(--border); border-radius:8px; padding:9px 11px; font:14px 'DM Sans','Noto Sans Thai',sans-serif; background:var(--cream); color:var(--text); }
+  input:focus, select:focus, textarea:focus { outline:none; border-color:var(--gold); }
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .guide { font-size:12px; color:var(--muted); line-height:1.6; background:var(--cream-dark); border-radius:8px; padding:8px 10px; margin-bottom:.8rem; }
+  .item { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--cream-dark); }
+  .item:last-child { border-bottom:none; }
+  .item.fail { background:rgba(139,32,32,.06); }
+  .item .txt { flex:1; font-size:13px; line-height:1.45; }
+  .item .txt b { color:var(--gold); margin-right:4px; }
+  .item .txt small { display:block; color:var(--muted); font-size:11.5px; }
+  .opts { display:flex; gap:4px; flex-shrink:0; }
+  .opts button { border:1.5px solid var(--border); background:#fff; border-radius:8px; min-width:40px; padding:8px 4px; font:600 12px 'DM Sans',sans-serif; color:var(--muted); cursor:pointer; }
+  .opts button.on-P { background:var(--green); border-color:var(--green); color:#fff; }
+  .opts button.on-F { background:var(--red); border-color:var(--red); color:#fff; }
+  .opts button.on-N { background:var(--muted); border-color:var(--muted); color:#fff; }
+  .defect { display:grid; grid-template-columns:1fr 1.4fr 1fr auto; gap:6px; margin-bottom:6px; align-items:center; }
+  .defect input[type=checkbox] { width:20px; height:20px; accent-color:var(--red); }
+  .btn { background:var(--red); color:#fff; border:none; border-radius:8px; padding:10px 18px; font:600 14px 'DM Sans',sans-serif; cursor:pointer; }
+  .btn.alt { background:var(--cream); color:var(--text); border:1.5px solid var(--border); }
+  .radio { display:flex; gap:8px; flex-wrap:wrap; }
+  .radio label { display:flex; align-items:flex-start; gap:8px; border:1.5px solid var(--border); border-radius:10px; padding:10px; font-size:13px; font-weight:500; color:var(--text); cursor:pointer; width:100%; }
+  .radio label small { display:block; font-weight:400; color:var(--muted); font-size:11.5px; }
+  .radio input { margin-top:3px; accent-color:var(--red); }
+  .bar { position:fixed; left:0; right:0; bottom:0; background:#fff; border-top:1px solid var(--border); padding:8px 1rem; display:flex; justify-content:space-between; align-items:center; font-size:12px; z-index:5; }
+  .bar b.p { color:var(--green); } .bar b.f { color:var(--red); }
+  .toast { position:fixed; top:14px; left:50%; transform:translateX(-50%); background:var(--text); color:#fff; padding:10px 18px; border-radius:10px; font-size:13px; display:none; z-index:20; max-width:90%; }
+  .toast.err { background:var(--red); } .toast.ok { background:var(--green); }
+  @media (max-width:560px) { .two { grid-template-columns:1fr; } .defect { grid-template-columns:1fr 1fr; } .item { flex-direction:column; align-items:stretch; } .opts button { flex:1; } }
+</style>
+</head>
+<body>
+<div class="header">
+  <small>Ammatara Pura Pool Villas</small>
+  <h1>Room Readiness &amp; Cleanliness Inspection</h1>
+  <p>แบบฟอร์มตรวจสอบความสะอาดและความเรียบร้อยของห้องพักก่อนลูกค้าเข้าพัก</p>
+</div>
+
+<div class="wrap" id="wrap">
+  <div class="sec">
+    <div class="sec-head"><div><b>Section 1: Room Information</b><small>ส่วนที่ 1: ข้อมูลห้องพัก</small></div></div>
+    <div class="sec-body">
+      <div class="two">
+        <div class="field"><label>วันที่ตรวจสอบ / Inspection Date *</label><input type="date" id="inspection_date"></div>
+        <div class="field"><label>หมายเลขวิลล่า / Villa Number *</label><input type="text" id="villa_number"></div>
+      </div>
+      <div class="two">
+        <div class="field"><label>ประเภทห้องพัก / Villa Type</label>
+          <select id="villa_type"><option value="">—</option><option>Garden View</option><option>Sea View</option><option>Beachfront</option></select></div>
+        <div class="field"><label>ชื่อลูกค้า / Guest Name</label><input type="text" id="guest_name"></div>
+      </div>
+      <div class="two">
+        <div class="field"><label>วันที่เข้าพัก / Arrival Date</label><input type="date" id="arrival_date"></div>
+        <div class="field"><label>แม่บ้านผู้ทำความสะอาด / Housekeeper *</label><input type="text" id="housekeeper"></div>
+      </div>
+      <div class="field"><label>ผู้ตรวจสอบขั้นสุดท้าย / Final Inspector *</label><input type="text" id="final_inspector"></div>
+      <div class="guide">
+        <b>P</b> — PASS ผ่านมาตรฐาน · <b>F</b> — FAIL ไม่ผ่าน ต้องแก้ไขก่อนส่งมอบห้อง · <b>N/A</b> — ไม่เกี่ยวข้องกับห้องพักประเภทนั้น<br>
+        พนักงานต้องตรวจสอบทุกรายการจริงก่อนทำเครื่องหมาย และต้องทดลองใช้อุปกรณ์ตามความเหมาะสม<br>
+        Staff must physically inspect every item and test equipment where appropriate.
+      </div>
+    </div>
+  </div>
+
+  <div id="sections"></div>
+
+  <div class="sec">
+    <div class="sec-head"><div><b>Section 11: Defect Report &amp; Corrective Action</b><small>ส่วนที่ 11: บันทึกข้อบกพร่องและการแก้ไข</small></div></div>
+    <div class="sec-body">
+      <div class="guide">รายการที่ไม่ผ่านต้องได้รับการแก้ไขและตรวจสอบซ้ำก่อนอนุมัติให้ห้องพักพร้อมเข้าพัก<br>All failed items must be rectified and re-inspected before the villa can be approved for guest arrival.</div>
+      <div id="defects"></div>
+      <button type="button" class="btn alt" onclick="addDefect()">+ Add defect / เพิ่มรายการ</button>
+      <div class="field" style="margin-top:.8rem"><label>หมายเหตุ / Remarks</label><textarea id="remarks" rows="2"></textarea></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-head"><div><b>Section 12: Final Inspection &amp; Room Release</b><small>ส่วนที่ 12: ผลการตรวจสอบและอนุมัติห้องพัก</small></div></div>
+    <div class="sec-body">
+      <div class="field"><label>สถานะห้องพัก / Room Status *</label>
+        <div class="radio">
+          <label><input type="radio" name="room_status" value="READY"><span>READY — พร้อมเข้าพัก<small>The villa is clean, tidy, and ready for guest arrival.</small></span></label>
+          <label><input type="radio" name="room_status" value="NOT READY"><span>NOT READY — ยังไม่พร้อมเข้าพัก<small>The villa does not meet the required standards and requires corrective action.</small></span></label>
+          <label><input type="radio" name="room_status" value="RE-CHECK REQUIRED"><span>RE-CHECK REQUIRED — ต้องตรวจสอบซ้ำ<small>Corrective action completed; a follow-up inspection is required.</small></span></label>
+        </div>
+      </div>
+      <div class="two">
+        <div class="field"><label>ชื่อผู้ตรวจสอบขั้นสุดท้าย / Final Inspector's Name *</label><input type="text" id="inspector_name"></div>
+        <div class="field"><label>ตำแหน่ง / Position</label><input type="text" id="position"></div>
+      </div>
+      <div class="field"><label>วันที่และเวลา / Date &amp; Time</label><input type="datetime-local" id="sign_datetime"></div>
+      <button type="button" class="btn" id="submitBtn" onclick="submitForm()">Submit Inspection / ส่งแบบฟอร์ม</button>
+    </div>
+  </div>
+</div>
+
+<div class="bar"><span>Answered <b id="cAns">0</b>/<b id="cTot">0</b></span><span><b class="p" id="cP">0</b> P · <b class="f" id="cF">0</b> F · <b id="cN">0</b> N/A</span></div>
+<div class="toast" id="toast"></div>
+
+<script>
+  // ▼▼ PASTE your Collector Web App URL here ▼▼
+  var ENDPOINT = 'https://script.google.com/macros/s/AKfycbz-cjQclPIrzVo_qbmO3FbzJ_L7JX_5xdndzV1C8gtI2SCvSX5yHliefPXnhRqpsFvjOw/exec';
+
+  // [Thai, English] — IDs are generated as <section>.<n> and match the Collector.
+  var SECTIONS = [
+    { n:2, th:'ทางเข้าและประตูห้องพัก', en:'Entrance & Entrance Door', items:[
+      ['พื้นทางเข้าสะอาด ไม่มีฝุ่น ทราย ใบไม้ หรือขยะ','Entrance floor is free of dust, sand, leaves, and rubbish.'],
+      ['ประตูสะอาด ไม่มีคราบมือหรือรอยเปื้อน','Door is clean and free of fingerprints and stains.'],
+      ['มือจับประตูสะอาด ไม่มีคราบมัน','Door handle is clean and free of grease marks.'],
+      ['ประตูเปิดและปิดได้ตามปกติ','Door opens and closes properly.'],
+      ['กุญแจและระบบล็อกประตูใช้งานได้','Door key and locking system work properly.'],
+      ['ผนังรอบประตูสะอาด ไม่มีคราบหรือใยแมงมุม','Walls around the entrance are free of stains and cobwebs.'],
+      ['พรมเช็ดเท้าสะอาดและจัดวางเรียบร้อย','Door mat is clean and properly positioned.'],
+      ['ป้ายหมายเลขวิลล่าสะอาดและอยู่ในสภาพดี','Villa number sign is clean and in good condition.']
+    ]},
+    { n:3, th:'ห้องนอน', en:'Bedroom', items:[
+      ['เตียงจัดวางและจัดแต่งเรียบร้อย','Bed is correctly positioned and neatly made.'],
+      ['ผ้าปูที่นอนสะอาด ไม่มีคราบหรือเส้นผม','Bed sheets are clean and free of stains and hair.'],
+      ['ผ้าปูที่นอนเรียบตึงและสอดเก็บเรียบร้อย','Bed sheets are smooth and neatly tucked in.'],
+      ['หมอนสะอาดและจัดวางอย่างเป็นระเบียบ','Pillows are clean and neatly arranged.'],
+      ['ปลอกหมอนสะอาด ไม่มีกลิ่นหรือคราบ','Pillowcases are clean and free of stains and unpleasant odors.'],
+      ['ผ้าคลุมเตียงจัดวางเรียบร้อย','Bed cover is neatly arranged.'],
+      ['ใต้เตียงสะอาด ไม่มีฝุ่น เส้นผม หรือขยะ','Area underneath the bed is free of dust, hair, and rubbish.'],
+      ['โต๊ะข้างเตียงสะอาด ไม่มีฝุ่นหรือคราบน้ำ','Bedside tables are clean and free of dust and watermarks.'],
+      ['โคมไฟและฐานโคมไฟสะอาด','Lamps and lamp bases are clean.'],
+      ['สวิตช์ไฟและหัวเตียงสะอาด ไม่มีคราบมือ','Light switches and headboard are clean and free of fingerprints.'],
+      ['โทรศัพท์และรีโมตสะอาดและจัดวางเรียบร้อย','Telephone and remote controls are clean and neatly positioned.'],
+      ['ตู้เสื้อผ้าสะอาด ไม่มีกลิ่นอับ','Wardrobe is clean and free of musty odors.'],
+      ['ไม้แขวนเสื้อจัดเรียงเรียบร้อย','Clothes hangers are neatly arranged.'],
+      ['กระจกสะอาด ไม่มีรอยนิ้วมือ','Mirrors are clean and free of fingerprints.'],
+      ['ผ้าม่านสะอาด ไม่มีฝุ่นหรือคราบ และจัดเรียบร้อย','Curtains are clean, free of dust and stains, and neatly arranged.'],
+      ['พื้นห้องสะอาด ไม่มีฝุ่น ทราย หรือเส้นผม','Bedroom floor is free of dust, sand, and hair.'],
+      ['มุมห้องและบัวพื้นไม่มีฝุ่นสะสม','Corners and floor skirting are free of accumulated dust.'],
+      ['เฟอร์นิเจอร์สะอาดและจัดวางตรงตำแหน่ง','Furniture is clean and correctly positioned.'],
+      ['ไม่มีของใช้หรือขยะตกค้างจากลูกค้ารายก่อน','No belongings or rubbish from previous guests remain.'],
+      ['ห้องนอนสะอาด สดชื่น และไม่มีกลิ่นอับ','Bedroom smells fresh and clean, with no musty odors.']
+    ]},
+    { n:4, th:'ห้องน้ำ', en:'Bathroom', items:[
+      ['พื้นห้องน้ำสะอาด ไม่มีเส้นผมหรือสิ่งสกปรก','Bathroom floor is clean and free of hair and dirt.'],
+      ['โถสุขภัณฑ์สะอาดทั้งภายในและภายนอก','Toilet bowl is clean inside and outside.'],
+      ['ฝารองนั่งและฝาปิดสะอาด ไม่มีคราบ','Toilet seat and lid are clean and free of stains.'],
+      ['อ่างล้างหน้าสะอาด ไม่มีคราบสบู่หรือคราบน้ำ','Washbasin is clean and free of soap residue and watermarks.'],
+      ['ก๊อกน้ำสะอาด ไม่มีคราบตะกรันที่เห็นได้ชัด','Faucets are clean and free of visible limescale.'],
+      ['กระจกสะอาด ไม่มีรอยนิ้วมือหรือคราบน้ำ','Mirror is clean and free of fingerprints and watermarks.'],
+      ['ฝักบัวสะอาด ไม่มีคราบสกปรก','Showerhead is clean and free of dirt.'],
+      ['พื้นที่อาบน้ำสะอาด ไม่มีคราบสบู่สะสม','Shower area is clean and free of soap residue.'],
+      ['ท่อระบายน้ำไม่มีเส้นผมหรือสิ่งอุดตันที่มองเห็นได้','Drain is free of visible hair and obstructions.'],
+      ['ไม่มีน้ำขังผิดปกติหลังทดสอบการระบายน้ำ','No abnormal standing water remains after testing drainage.'],
+      ['ผนังและร่องยาแนวสะอาด ไม่มีคราบที่เห็นได้ชัด','Walls and grout are clean and free of visible stains.'],
+      ['มุมห้องน้ำและหลังประตูสะอาด','Bathroom corners and the area behind the door are clean.'],
+      ['ผ้าเช็ดตัวสะอาด พับเรียบร้อย และครบตามจำนวน','Bath towels are clean, neatly folded, and complete.'],
+      ['ผ้าเช็ดมือและผ้าเช็ดหน้าจัดวางเรียบร้อย','Hand towels and face towels are neatly arranged.'],
+      ['สบู่ แชมพู และอุปกรณ์อาบน้ำครบถ้วน','Soap, shampoo, and bathroom amenities are fully replenished.'],
+      ['กระดาษชำระจัดวางเรียบร้อยและมีเพียงพอ','Toilet paper is neatly presented and sufficiently stocked.'],
+      ['ถังขยะสะอาดและไม่มีขยะตกค้าง','Waste bin is clean and empty.'],
+      ['ถังขยะมีถุงรองตามมาตรฐาน','Waste bin liner is in place according to hotel standards.'],
+      ['ไม่มีน้ำรั่วซึมตามก๊อก ท่อ หรืออุปกรณ์ต่าง ๆ','No water leaks are visible around faucets, pipes, or fixtures.'],
+      ['ห้องน้ำไม่มีกลิ่นอับหรือกลิ่นไม่พึงประสงค์','Bathroom is free of musty or unpleasant odors.']
+    ]},
+    { n:5, th:'ห้องนั่งเล่น', en:'Living Area', items:[
+      ['โซฟาสะอาด ไม่มีฝุ่น คราบ หรือขยะ','Sofa is clean and free of dust, stains, and rubbish.'],
+      ['หมอนอิงจัดวางเรียบร้อย','Decorative cushions are neatly arranged.'],
+      ['ใต้โซฟาและซอกเฟอร์นิเจอร์ไม่มีฝุ่น','Areas underneath and between furniture are free of dust.'],
+      ['โต๊ะกลางสะอาด ไม่มีคราบน้ำหรือรอยนิ้วมือ','Coffee table is clean and free of watermarks and fingerprints.'],
+      ['ชั้นวางของสะอาด ไม่มีฝุ่นสะสม','Shelves are clean and free of accumulated dust.'],
+      ['หน้าจอโทรทัศน์สะอาด','Television screen is clean.'],
+      ['รีโมตโทรทัศน์สะอาดและจัดวางตรงตำแหน่ง','Television remote control is clean and correctly positioned.'],
+      ['พื้นสะอาด ไม่มีฝุ่นหรือเส้นผม','Floor is clean and free of dust and hair.'],
+      ['ประตูบานเลื่อนและกระจกสะอาด','Sliding doors and glass panels are clean.'],
+      ['ผ้าม่านสะอาดและจัดวางเรียบร้อย','Curtains are clean and neatly arranged.'],
+      ['โต๊ะและเก้าอี้รับประทานอาหารสะอาด','Dining table and chairs are clean.'],
+      ['เก้าอี้รับประทานอาหารจัดวางตรงตำแหน่ง','Dining chairs are correctly positioned.'],
+      ['ไม่มีของใช้หรือขยะตกค้างจากลูกค้ารายก่อน','No belongings or rubbish from previous guests remain.']
+    ]},
+    { n:6, th:'มินิบาร์และอุปกรณ์ภายในห้อง', en:'Minibar & In-Room Amenities', items:[
+      ['ตู้เย็นสะอาด ไม่มีกลิ่น และไม่มีน้ำรั่ว','Refrigerator is clean, odor-free, and free of water leaks.'],
+      ['ตรวจสอบรายการมินิบาร์ครบถ้วนตามมาตรฐาน','Minibar items are complete according to hotel standards.'],
+      ['น้ำดื่มครบตามจำนวนที่กำหนด','Drinking water is replenished according to the required quantity.'],
+      ['กาต้มน้ำสะอาดและพร้อมใช้งาน','Electric kettle is clean and ready for use.'],
+      ['ถ้วยกาแฟ แก้วน้ำ และจานสะอาด','Coffee cups, drinking glasses, and plates are clean.'],
+      ['ชา กาแฟ น้ำตาล และอุปกรณ์ครบถ้วน','Tea, coffee, sugar, and related amenities are fully replenished.'],
+      ['ช้อนและอุปกรณ์รับประทานอาหารสะอาด','Spoons and dining utensils are clean.'],
+      ['ไดร์เป่าผมสะอาดและจัดวางเรียบร้อย','Hairdryer is clean and neatly positioned.'],
+      ['เสื้อคลุมอาบน้ำสะอาดและจัดวางเรียบร้อย','Bathrobes are clean and neatly arranged.'],
+      ['รองเท้าแตะครบและอยู่ในสภาพดี','Slippers are complete and in good condition.'],
+      ['คู่มือโรงแรมและข้อมูลบริการครบถ้วน','Hotel directory and guest service information are complete.'],
+      ['ไม่มีอุปกรณ์ชำรุดหรือแตกหัก','No damaged or broken equipment is present.']
+    ]},
+    { n:7, th:'ห้องครัว (ถ้ามี)', en:'Kitchen Area (if applicable)', items:[
+      ['เคาน์เตอร์ครัวสะอาด ไม่มีคราบอาหาร','Kitchen countertop is clean and free of food stains.'],
+      ['อ่างล้างจานสะอาด ไม่มีเศษอาหาร','Sink is clean and free of food debris.'],
+      ['ก๊อกน้ำและบริเวณรอบอ่างสะอาด','Faucet and surrounding sink area are clean.'],
+      ['ตู้เก็บอุปกรณ์สะอาดและจัดเรียบร้อย','Cabinets are clean and neatly organized.'],
+      ['อุปกรณ์ครัวครบตามรายการมาตรฐาน','Kitchen equipment is complete according to the standard inventory.'],
+      ['จาน ชาม และช้อนส้อมสะอาด','Plates, bowls, and cutlery are clean.'],
+      ['เตาและอุปกรณ์ทำอาหารสะอาด','Stove and cooking equipment are clean.'],
+      ['ตู้เย็นและพื้นที่เก็บอาหารสะอาด','Refrigerator and food storage areas are clean.'],
+      ['พื้นและมุมห้องครัวสะอาด','Kitchen floor and corners are clean.'],
+      ['ถังขยะสะอาด ไม่มีเศษอาหารตกค้าง','Waste bin is clean and free of leftover food.']
+    ]},
+    { n:8, th:'เครื่องปรับอากาศ ระบบไฟฟ้า และอุปกรณ์', en:'Air Conditioning, Lighting & Equipment', items:[
+      ['เครื่องปรับอากาศทำงานและให้ความเย็นตามปกติ','Air conditioning operates properly and cools effectively.'],
+      ['ไม่มีเสียงหรือกลิ่นผิดปกติจากเครื่องปรับอากาศ','No unusual noise or odor comes from the air-conditioning unit.'],
+      ['ไฟทุกจุดทำงานตามปกติ','All lights are functioning properly.'],
+      ['สวิตช์ไฟและปลั๊กไฟอยู่ในสภาพดี','Light switches and electrical outlets are in good condition.'],
+      ['โทรทัศน์และรีโมตใช้งานได้','Television and remote control are functioning properly.'],
+      ['Wi-Fi พร้อมใช้งาน','Wi-Fi is available and functioning properly.'],
+      ['ตู้เซฟพร้อมใช้งาน','In-room safe is ready for use.'],
+      ['ประตูและหน้าต่างเปิด-ปิดได้ตามปกติ','Doors and windows open and close properly.'],
+      ['ระบบน้ำร้อนและน้ำเย็นทำงานปกติ','Hot and cold water systems are functioning properly.'],
+      ['ไม่มีรอยรั่วซึมหรือความเสียหายที่เห็นได้ชัด','No visible water leaks or damage are present.']
+    ]},
+    { n:9, th:'สระว่ายน้ำส่วนตัวและพื้นที่ภายนอก', en:'Private Pool & Outdoor Area', items:[
+      ['น้ำในสระสะอาดและใส','Pool water is clean and clear.'],
+      ['ไม่มีใบไม้ แมลง หรือสิ่งสกปรกในสระ','Pool is free of leaves, insects, and visible debris.'],
+      ['ขอบสระและพื้นรอบสระสะอาด','Pool edges and surrounding floor are clean.'],
+      ['ทางเดินไม่มีน้ำขังผิดปกติ','No abnormal standing water is present along walkways.'],
+      ['เตียงอาบแดดสะอาดและจัดวางเรียบร้อย','Sun loungers are clean and neatly arranged.'],
+      ['เบาะและหมอนภายนอกสะอาดและแห้ง','Outdoor cushions and pillows are clean and dry.'],
+      ['โต๊ะและเก้าอี้ภายนอกสะอาด','Outdoor tables and chairs are clean.'],
+      ['ระเบียงสะอาด ไม่มีฝุ่นหรือใบไม้','Terrace is clean and free of dust and leaves.'],
+      ['สวนและพื้นที่สีเขียวเรียบร้อย','Garden and landscaped areas are neat and well-maintained.'],
+      ['มุมและเพดานภายนอกไม่มีใยแมงมุม','Outdoor corners and ceiling areas are free of cobwebs.'],
+      ['ไม่มีขยะหรือสิ่งของที่ไม่เกี่ยวข้องในพื้นที่ภายนอก','Outdoor areas are free of rubbish and unwanted items.'],
+      ['ประตูกระจกและหน้าต่างที่เชื่อมกับพื้นที่ภายนอกสะอาด','Glass doors and windows connecting to outdoor areas are clean.'],
+      ['ตรวจสอบความปลอดภัยบริเวณสระและทางเดิน','Poolside and walkway safety have been checked.']
+    ]},
+    { n:10, th:'การจัดเตรียมห้องขั้นสุดท้ายก่อนลูกค้าเข้าพัก', en:'Final Presentation & Guest Readiness', items:[
+      ['ห้องพักมีกลิ่นสะอาดและสดชื่น','Villa smells fresh and clean.'],
+      ['ไม่มีฝุ่น เส้นผม หรือสิ่งสกปรกที่มองเห็นได้','No visible dust, hair, or dirt remains in the villa.'],
+      ['เฟอร์นิเจอร์และของตกแต่งจัดวางตรงตำแหน่ง','Furniture and decorative items are correctly positioned.'],
+      ['หมอน ผ้าคลุมเตียง และผ้าม่านจัดวางเรียบร้อย','Pillows, bed covers, and curtains are neatly arranged.'],
+      ['แสงไฟและบรรยากาศภายในห้องเหมาะสม','Lighting and overall room ambience are appropriate.'],
+      ['เปิดเครื่องปรับอากาศล่วงหน้าตามขั้นตอนของโรงแรม','Air conditioning has been switched on in advance according to hotel procedures.'],
+      ['การจัดเตรียมเตียงตรงตามรายละเอียดการจอง','Bed configuration matches the reservation details.'],
+      ['เตียงเสริมหรือโซฟาเบดพร้อม หากมีการร้องขอ','Extra bed or sofa bed is ready, if requested.'],
+      ['ของต้อนรับลูกค้าครบตามรายละเอียดการจอง','Welcome amenities are prepared according to the reservation.'],
+      ['คำขอพิเศษของลูกค้าได้รับการดำเนินการครบถ้วน','All special guest requests have been fulfilled.'],
+      ['ไม่มีทรัพย์สินของลูกค้ารายก่อนตกค้าง','No belongings from previous guests remain in the villa.'],
+      ['ตรวจสอบภาพรวมจากมุมมองของลูกค้าเมื่อเปิดประตูเข้าห้อง',"Final visual inspection has been completed from the guest's perspective upon entering the villa."]
+    ]}
+  ];
+
+  var state = {};   // id -> 'P' | 'F' | 'N'
+  var TOTAL = 0;
+
+  function buildSections() {
+    var html = '';
+    SECTIONS.forEach(function(s) {
+      html += '<div class="sec"><div class="sec-head"><div><b>Section ' + s.n + ': ' + s.en + '</b><small>ส่วนที่ ' + s.n + ': ' + s.th + '</small></div>' +
+        '<button type="button" onclick="markAll(' + s.n + ')">All PASS</button></div><div class="sec-body">';
+      s.items.forEach(function(it, i) {
+        var id = s.n + '.' + (i + 1);
+        TOTAL++;
+        html += '<div class="item" id="row-' + id + '"><div class="txt"><b>' + id + '</b>' + it[0] + '<small>' + it[1] + '</small></div>' +
+          '<div class="opts"><button type="button" data-id="' + id + '" data-v="P" onclick="setVal(this)">P</button>' +
+          '<button type="button" data-id="' + id + '" data-v="F" onclick="setVal(this)">F</button>' +
+          '<button type="button" data-id="' + id + '" data-v="N" onclick="setVal(this)">N/A</button></div></div>';
+      });
+      html += '</div></div>';
+    });
+    document.getElementById('sections').innerHTML = html;
+    document.getElementById('cTot').textContent = TOTAL;
+  }
+
+  function paint(id) {
+    var row = document.getElementById('row-' + id);
+    row.classList.toggle('fail', state[id] === 'F');
+    row.querySelectorAll('button').forEach(function(b) {
+      b.className = (state[id] === b.getAttribute('data-v')) ? 'on-' + b.getAttribute('data-v') : '';
+    });
+  }
+  function setVal(btn) {
+    var id = btn.getAttribute('data-id'), v = btn.getAttribute('data-v');
+    state[id] = (state[id] === v) ? undefined : v;   // tap again to clear
+    paint(id); updateBar();
+  }
+  function markAll(n) {
+    var s = SECTIONS.filter(function(x) { return x.n === n; })[0];
+    s.items.forEach(function(_, i) {
+      var id = n + '.' + (i + 1);
+      if (!state[id]) { state[id] = 'P'; paint(id); }   // only fills unanswered items
+    });
+    updateBar();
+  }
+  function counts() {
+    var c = { P:0, F:0, N:0 };
+    Object.keys(state).forEach(function(k) { if (state[k]) c[state[k]]++; });
+    return c;
+  }
+  function updateBar() {
+    var c = counts();
+    document.getElementById('cAns').textContent = c.P + c.F + c.N;
+    document.getElementById('cP').textContent = c.P;
+    document.getElementById('cF').textContent = c.F;
+    document.getElementById('cN').textContent = c.N;
+  }
+
+  function addDefect() {
+    var d = document.createElement('div');
+    d.className = 'defect';
+    d.innerHTML = '<input type="text" placeholder="Area / Item (จุดที่พบ)"><input type="text" placeholder="Issue (รายละเอียด)">' +
+      '<input type="text" placeholder="Responsible (ผู้รับผิดชอบ)"><input type="checkbox" title="Rectified / แก้ไขแล้ว">';
+    document.getElementById('defects').appendChild(d);
+  }
+
+  function toast(msg, type) {
+    var t = document.getElementById('toast');
+    t.textContent = msg; t.className = 'toast ' + (type || ''); t.style.display = 'block';
+    clearTimeout(toast._t); toast._t = setTimeout(function() { t.style.display = 'none'; }, 4500);
+  }
+  function val(id) { return document.getElementById(id).value.trim(); }
+
+  function submitForm() {
+    var req = ['inspection_date', 'villa_number', 'housekeeper', 'final_inspector', 'inspector_name'];
+    for (var i = 0; i < req.length; i++) {
+      if (!val(req[i])) { document.getElementById(req[i]).focus(); return toast('Please fill all required (*) fields.', 'err'); }
+    }
+    var missing = [];
+    SECTIONS.forEach(function(s) { s.items.forEach(function(_, i) { var id = s.n + '.' + (i + 1); if (!state[id]) missing.push(id); }); });
+    if (missing.length) {
+      var el = document.getElementById('row-' + missing[0]);
+      el.scrollIntoView({ behavior:'smooth', block:'center' });
+      return toast(missing.length + ' item(s) not answered, first: ' + missing[0], 'err');
+    }
+    var statusEl = document.querySelector('input[name=room_status]:checked');
+    if (!statusEl) return toast('Please select a Room Status.', 'err');
+    var c = counts();
+    if (c.F > 0 && statusEl.value === 'READY') return toast('Failed items exist — status cannot be READY.', 'err');
+    if (ENDPOINT.indexOf('PASTE_') === 0) return toast('ENDPOINT is not set in the form.', 'err');
+
+    var items = {}, failed = [];
+    SECTIONS.forEach(function(s) {
+      s.items.forEach(function(it, i) {
+        var id = s.n + '.' + (i + 1);
+        items[id] = state[id] === 'N' ? 'N/A' : state[id];
+        if (state[id] === 'F') failed.push(id + ' ' + it[1]);
+      });
+    });
+    var defects = [];
+    document.querySelectorAll('#defects .defect').forEach(function(r) {
+      var f = r.querySelectorAll('input');
+      if (f[0].value.trim() || f[1].value.trim()) defects.push({ area:f[0].value.trim(), issue:f[1].value.trim(), person:f[2].value.trim(), rectified:f[3].checked });
+    });
+
+    var payload = {
+      inspection_date: val('inspection_date'), villa_number: val('villa_number'), villa_type: val('villa_type'),
+      guest_name: val('guest_name'), arrival_date: val('arrival_date'), housekeeper: val('housekeeper'),
+      final_inspector: val('final_inspector'), items: items,
+      pass_count: c.P, fail_count: c.F, na_count: c.N, failed_items: failed, defects: defects,
+      room_status: statusEl.value, inspector_name: val('inspector_name'), position: val('position'),
+      sign_datetime: val('sign_datetime').replace('T', ' '), remarks: val('remarks')
+    };
+
+    var btn = document.getElementById('submitBtn');
+    btn.disabled = true; btn.textContent = 'Sending…';
+    // text/plain avoids a CORS preflight; Apps Script reads it from e.postData.contents
+    fetch(ENDPOINT, { method:'POST', mode:'no-cors', headers:{ 'Content-Type':'text/plain;charset=utf-8' }, body: JSON.stringify(payload) })
+      .then(function() {
+        toast('✓ Inspection submitted for Villa ' + payload.villa_number, 'ok');
+        setTimeout(function() { location.reload(); }, 1800);
+      })
+      .catch(function(e) {
+        toast('Send failed: ' + e, 'err');
+        btn.disabled = false; btn.textContent = 'Submit Inspection / ส่งแบบฟอร์ม';
+      });
+  }
+
+  buildSections(); addDefect(); addDefect();
+  (function() {
+    var d = new Date(), p = function(n) { return ('0' + n).slice(-2); };
+    document.getElementById('inspection_date').value = d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+  })();
+</script>
+</body>
+</html>
